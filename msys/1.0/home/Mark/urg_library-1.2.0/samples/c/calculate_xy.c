@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
         {
             if( ( abs(cluster_centroid[ii*dim]) > Xmin || abs(cluster_centroid[ii*dim+1]) > Ymin ) && abs(cluster_centroid[ii*dim]) < Xmax && abs(cluster_centroid[ii*dim+1]) < Ymax )
             {
-                if(0)//(lo_send(t, "/xy", "ff", (float)cluster_centroid[ii*dim], (float)cluster_centroid[ii*dim+1]) == -1)
+                if(lo_send(t, "/xy", "ff", (float)cluster_centroid[ii*dim], (float)cluster_centroid[ii*dim+1]) == -1)
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else
                     printf("%ld = %lf, %lf\n", ii, cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);	
