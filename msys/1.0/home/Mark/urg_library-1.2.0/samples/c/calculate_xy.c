@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
             }
 
             radian = urg_index2rad(&urg, i);
-            y = distance * cos(radian);
-            x = distance * sin(radian) * -1.0;
+            y = distance * cos(radian) * -1.0;
+            x = distance * sin(radian);
 
             if( ( abs(x) > Xmin || abs(y) > Ymin ) && abs(x) < Xmax && abs(y) < Ymax )
             {
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
                 X[kk*dim+1] = y;
                 if( distprint = calc_distance(dim, &X[kk*dim], last) > 8100.0 )
                 {
-                    //printf("%lf\n", distprint);
+                    printf("%lf\n", radian);
                     cluster_centroid[k*dim] = x;
                     cluster_centroid[k*dim+1] = y;
 					//printf("%ld, %ld\n", (long)x, (long)y);
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
             {
                 if(lo_send(t, "/xy", "ff", (float)cluster_centroid[ii*dim], (float)cluster_centroid[ii*dim+1]) == -1)
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                else
+                else if(0)
                     printf("%ld = %lf, %lf\n", ii, cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);	
 	        }
         }
