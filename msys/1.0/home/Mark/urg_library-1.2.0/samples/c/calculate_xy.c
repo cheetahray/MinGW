@@ -17,11 +17,17 @@
 #include <unistd.h>
 #include "lo/lo.h"
 #include "kmeans.h"
+#include "rotate.h"
+/*
+#define Xmin 230.0
+#define Xmax 1350.0
+#define Ymin 2240.0
+#define Ymax 3360.0
+*/
 #define Xmin 100.0
 #define Xmax 1200.0
 #define Ymin 100.0
-#define Ymax 1200.0
- 
+#define Ymax 1200.0 
 /*
 void* say_hello(void* data)
 {
@@ -59,6 +65,24 @@ int main(int argc, char *argv[])
         perror("urg_max_index()");
         return 1;
     }
+
+    // \~english Defines the measurement scope (start, end steps)
+    // \~english Defines a measurement scope of 90 [deg] at the front of the sensor, and no step grouping in this example
+    /*
+    int first_step = urg_rad2step(&urg, -22);
+    int last_step = urg_rad2step(&urg, +22);
+    */
+    int first_step = urg_rad2step(&urg, -135);
+    int last_step = urg_rad2step(&urg, +135);
+    int skip_step = 0;
+    int ret = urg_set_scanning_parameter(&urg, first_step, last_step, skip_step);
+    // \todo check error code
+
+    // \~english Defines the number of scans
+    // \~english 123 scans are requested, and no scan skipping in this example
+    int scan_times = 1;
+    int skip_scan = 0;
+
     /*
     pthread_t t1;
 
@@ -66,13 +90,13 @@ int main(int argc, char *argv[])
     pthread_join(t1,NULL);
     */
     lo_address t = lo_address_new("127.0.0.1", "7770");
-    //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, 0);
+    //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
     while(1)
     {
         // Gets measurement data
-        urg_start_measurement(&urg, URG_DISTANCE, 1, 0);
+        urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
-        sleep(0.01);
+        //sleep(0.01);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
             urg_close(&urg);
@@ -110,14 +134,14 @@ int main(int argc, char *argv[])
             y = distance * cos(radian) * -1.0;
             x = distance * sin(radian);
 
-            if( ( abs(x) > Xmin || abs(y) > Ymin ) && abs(x) < Xmax && abs(y) < Ymax )
+            if( ( fabs(x) > Xmin || fabs(y) > Ymin ) && fabs(x) < Xmax && fabs(y) < Ymax )
             {
                 double distprint;
                 X[kk*dim] = x;
                 X[kk*dim+1] = y;
                 if( distprint = calc_distance(dim, &X[kk*dim], last) > 8100.0 )
                 {
-                    printf("%lf\n", radian);
+                    //printf("%lf\n", radian);
                     cluster_centroid[k*dim] = x;
                     cluster_centroid[k*dim+1] = y;
 					//printf("%ld, %ld\n", (long)x, (long)y);
@@ -133,7 +157,7 @@ int main(int argc, char *argv[])
         /*
 		for (int ii = 0; ii < k; ii++)
         {
-            if( ( abs(cluster_centroid[ii*dim]) > Xmin || abs(cluster_centroid[ii*dim+1]) > Ymin ) && abs(cluster_centroid[ii*dim]) < Xmax && abs(cluster_centroid[ii*dim+1]) < Ymax )
+            if( ( fabs(cluster_centroid[ii*dim]) > Xmin || fabs(cluster_centroid[ii*dim+1]) > Ymin ) && fabs(cluster_centroid[ii*dim]) < Xmax && fabs(cluster_centroid[ii*dim+1]) < Ymax )
                 printf("%lf, %lf\n", cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);
 		}
         */
@@ -141,13 +165,33 @@ int main(int argc, char *argv[])
         //printf("%ld", k);
 		for (int ii = 0; ii < k; ii++)
         {
-            if( ( abs(cluster_centroid[ii*dim]) > Xmin || abs(cluster_centroid[ii*dim+1]) > Ymin ) && abs(cluster_centroid[ii*dim]) < Xmax && abs(cluster_centroid[ii*dim+1]) < Ymax )
+            if( ( fabs(cluster_centroid[ii*dim]) > Xmin || fabs(cluster_centroid[ii*dim+1]) > Ymin ) && fabs(cluster_centroid[ii*dim]) < Xmax && fabs(cluster_centroid[ii*dim+1]) < Ymax )
             {
+                inputMatrix[0][0] = cluster_centroid[ii*dim];
+                inputMatrix[1][0] = cluster_centroid[ii*dim+1];
+                inputMatrix[2][0] = 0.0;
+                inputMatrix[3][0] = 1.0;
+                outputMatrix[0][0] = cluster_centroid[ii*dim];
+                outputMatrix[1][0] = cluster_centroid[ii*dim+1];
+                outputMatrix[2][0] = 0.0;
+                outputMatrix[3][0] = 1.0;
+                showPoint();
+                setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
+                multiplyMatrix();
+                showPoint();
+                setUpRotationMatrix(0.0, 0.0, 1.0, 0.9);
+                multiplyMatrix();
+                showPoint();
+                setUpRotationMatrix(0.0, 0.0, 0.0, 1.0);
+                multiplyMatrix();
+                showPoint();
+                /*
                 if(lo_send(t, "/xy", "ff", (float)cluster_centroid[ii*dim], (float)cluster_centroid[ii*dim+1]) == -1)
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
-                    printf("%ld = %lf, %lf\n", ii, cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);	
-	        }
+                    printf("%d = %lf, %lf\n", ii, cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);	
+                */
+	    }
         }
         
 		/*
