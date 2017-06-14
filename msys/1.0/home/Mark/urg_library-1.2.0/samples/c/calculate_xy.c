@@ -27,7 +27,7 @@
 #define Xmin 100.0
 #define Xmax 1200.0
 #define Ymin 100.0
-#define Ymax 1200.0 
+#define Ymax 1200.0
 /*
 void* say_hello(void* data)
 {
@@ -112,15 +112,15 @@ int main(int argc, char *argv[])
                 cluster_centroid[ii*dim+1] = 0.0;
             }
             k = 0;
-			kk = 0;
+            kk = 0;
             last[0] = 0.0;
             last[1] = 0.0;
         }
 
         // Outputs X-Y coordinates
         urg_distance_min_max(&urg, &min_distance, &max_distance);
-        for (i = 0; i < n && k < 16; ++i) 
-		{
+        for (i = 0; i < n && k < 16; ++i)
+        {
             long distance = data[i];
             double radian;
             double x;
@@ -144,9 +144,9 @@ int main(int argc, char *argv[])
                     //printf("%lf\n", radian);
                     cluster_centroid[k*dim] = x;
                     cluster_centroid[k*dim+1] = y;
-					//printf("%ld, %ld\n", (long)x, (long)y);
+                    //printf("%ld, %ld\n", (long)x, (long)y);
                     k++;
-				}
+                }
                 kk++;
                 last[0] = x;
                 last[1] = y;
@@ -155,15 +155,15 @@ int main(int argc, char *argv[])
             }
         }
         /*
-		for (int ii = 0; ii < k; ii++)
+        for (int ii = 0; ii < k; ii++)
         {
             if( ( fabs(cluster_centroid[ii*dim]) > Xmin || fabs(cluster_centroid[ii*dim+1]) > Ymin ) && fabs(cluster_centroid[ii*dim]) < Xmax && fabs(cluster_centroid[ii*dim+1]) < Ymax )
                 printf("%lf, %lf\n", cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);
-		}
+        }
         */
-		kmeans(dim, X, kk, k, cluster_centroid, cluster_assignment_final);
+        kmeans(dim, X, kk, k, cluster_centroid, cluster_assignment_final);
         //printf("%ld", k);
-		for (int ii = 0; ii < k; ii++)
+        for (int ii = 0; ii < k; ii++)
         {
             if( ( fabs(cluster_centroid[ii*dim]) > Xmin || fabs(cluster_centroid[ii*dim+1]) > Ymin ) && fabs(cluster_centroid[ii*dim]) < Xmax && fabs(cluster_centroid[ii*dim+1]) < Ymax )
             {
@@ -189,12 +189,12 @@ int main(int argc, char *argv[])
                 if(lo_send(t, "/xy", "ff", (float)cluster_centroid[ii*dim], (float)cluster_centroid[ii*dim+1]) == -1)
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
-                    printf("%d = %lf, %lf\n", ii, cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);	
+                    printf("%d = %lf, %lf\n", ii, cluster_centroid[ii*dim], cluster_centroid[ii*dim+1]);
                 */
-	    }
+            }
         }
-        
-		/*
+
+        /*
         for (int ii = 0; ii < n; ii++)
         {
             printf("%ld, ", cluster_assignment_final);
