@@ -24,10 +24,10 @@
 #define Ymin 2240.0
 #define Ymax 3360.0
 */
-#define Xmin 100.0
+#define Xmin 0.0
 #define Xmax 1200.0
-#define Ymin 100.0
-#define Ymax 1200.0
+#define Ymin 2240.0
+#define Ymax 3360.0
 /*
 void* say_hello(void* data)
 {
@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
     int first_step = urg_rad2step(&urg, -22);
     int last_step = urg_rad2step(&urg, +22);
     */
-    int first_step = urg_rad2step(&urg, -135);
-    int last_step = urg_rad2step(&urg, +135);
+    int first_step = urg_rad2step(&urg, 0);
+    int last_step = urg_rad2step(&urg, +29);
     int skip_step = 0;
     int ret = urg_set_scanning_parameter(&urg, first_step, last_step, skip_step);
     // \todo check error code
@@ -134,12 +134,12 @@ int main(int argc, char *argv[])
             y = distance * cos(radian) * -1.0;
             x = distance * sin(radian);
 
-            if( ( fabs(x) > Xmin || fabs(y) > Ymin ) && fabs(x) < Xmax && fabs(y) < Ymax )
+            if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
                 double distprint;
                 X[kk*dim] = x;
                 X[kk*dim+1] = y;
-                if( distprint = calc_distance(dim, &X[kk*dim], last) > 8100.0 )
+                if( distprint = calc_distance(dim, &X[kk*dim], last) > 12100.0 )
                 {
                     //printf("%lf\n", radian);
                     cluster_centroid[k*dim] = x;
@@ -175,13 +175,13 @@ int main(int argc, char *argv[])
                 outputMatrix[1][0] = cluster_centroid[ii*dim+1];
                 outputMatrix[2][0] = 0.0;
                 outputMatrix[3][0] = 1.0;
-                showPoint();
+                //showPoint();
                 setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
                 multiplyMatrix();
-                showPoint();
+                //showPoint();
                 setUpRotationMatrix(0.0, 0.0, 1.0, 0.9);
                 multiplyMatrix();
-                showPoint();
+                //showPoint();
                 setUpRotationMatrix(0.0, 0.0, 0.0, 1.0);
                 multiplyMatrix();
                 showPoint();
