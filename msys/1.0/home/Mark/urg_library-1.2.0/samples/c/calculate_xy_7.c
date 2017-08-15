@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
                     //printf("y = %lf\n", last[1]);
                     if( last[1] != 0.0 )
                     {
-                        if ( lo_send(t, "/radar", "fff", 7.0, (float)( (last[0]-Xmin)/2.24 ), (float)( (Ymin+last[1])/-2.24) ) == -1 )
+                        if ( lo_send(t, "/radar", "iii", 7, (int)( (last[0]-Xmin)/2.24 ), (int)( (Ymin+last[1])/-2.24) ) == -1 )
                             printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                         else if(1)
                             printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 
         if( last[1] != 0.0 )
         {
-            if ( lo_send(t, "/radar", "fff", 1.0, (float)( (last[0]-Xmin)/2.24 ), (float)( (Ymin+last[1])/-2.24) ) == -1 )
+            if ( lo_send(t, "/radar", "iii", 7, (int)( (last[0]-Xmin)/2.24 ), (int)( (Ymin+last[1])/-2.24) ) == -1 )
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
             else
                 printf("x = %lf, y = %lf\n", last[0], last[1]);
