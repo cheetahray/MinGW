@@ -3,7 +3,7 @@ from OSC import OSCServer
 import sys
 from time import sleep
 
-server = OSCServer( ("localhost", 7770) )
+server = OSCServer( ("localhost", 12002) )
 server.timeout = 0
 run = True
 
@@ -24,14 +24,14 @@ def user_callback(path, tags, args, source):
     # tags will contain 'fff'
     # args is a OSCMessage with data
     # source is where the message came from (in case you need to reply)
-	print 'x ={:>15} , y ={:>15}'.format(args[0],args[1])
+	print 'i ={:>5} , x ={:>15} , y ={:>15}'.format(args[0],args[1],args[2])
     
 def quit_callback(path, tags, args, source):
     # don't do this at home (or it'll quit blender)
     global run
     run = False
 
-server.addMsgHandler( "/xy", user_callback )
+server.addMsgHandler( "/radar", user_callback )
 server.addMsgHandler( "/quit", quit_callback )
 
 # user script that's called by the game engine every frame

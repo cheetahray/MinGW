@@ -25,7 +25,12 @@ double calc_distance(int dim, double *p1, double *p2)
     double distance_sq_sum = 0;
 
     for (int ii = 0; ii < dim; ii++)
+    {
         distance_sq_sum += sqr(p1[ii] - p2[ii]);
+        //printf("ii=%d, p1=%lf, p2=%lf\n", ii, p1[ii], p2[ii]);
+    }
+
+    //printf("%lf\n", distance_sq_sum);
 
     return distance_sq_sum;
 
