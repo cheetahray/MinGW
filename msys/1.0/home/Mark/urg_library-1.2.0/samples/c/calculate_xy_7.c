@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
     int first_step = urg_rad2step(&urg, -22);
     int last_step = urg_rad2step(&urg, +22);
     */
-    int first_step = urg_rad2step(&urg, 0);
-    int last_step = urg_rad2step(&urg, 0.65);
+    int first_step = urg_deg2step(&urg, 0.0); //urg_rad2step(&urg, 0);
+    int last_step = urg_deg2step(&urg, 37.0); //urg_rad2step(&urg, 0.65);
     int skip_step = 0;
     int ret = urg_set_scanning_parameter(&urg, first_step, last_step, skip_step);
     // \todo check error code
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
         // Gets measurement data
         urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
-        //sleep(0.01);
+        sleep(0.1);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
             urg_close(&urg);
