@@ -19,10 +19,10 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 253.0
-#define Xmax 1474.0
-#define Ymin 2136.0
-#define Ymax 3499.0
+#define Xmin 180.0
+#define Xmax 1367.0
+#define Ymin 2171.0
+#define Ymax 3479.0
 /*
 void* say_hello(void* data)
 {
@@ -50,7 +50,10 @@ int main(int argc, char *argv[])
     double cluster_centroid[32];
     int   *cluster_assignment_final;
     double last[2];
-
+    double unitX = 0.0;
+	double unitY = 0.0;
+	unitX = (Xmax - Xmin) / 448;
+	unitY = (Ymax - Ymin) / 448;
     if (open_urg_sensor(&urg, argc, argv) < 0) {
         return 1;
     }
@@ -136,7 +139,7 @@ int main(int argc, char *argv[])
                 X[kk*dim+1] = y;
                 if( (distprint = calc_distance(dim, &X[kk*dim], last)) > 40000.0 )
                 {
-                    if(last[1] == 0.0 || counter >= 2)
+                    if(last[1] == 0.0 || counter >= 3)
                     {
                         cluster_centroid[k*dim] = x;
                         cluster_centroid[k*dim+1] = y;
@@ -164,8 +167,6 @@ int main(int argc, char *argv[])
         if(k>0)
         {
             printf("%ld", k);
-            last[0] = 0.0;
-            last[1] = 0.0;
         }
 
         for (int ii = 0; ii < k; ii++)
@@ -180,26 +181,7 @@ int main(int argc, char *argv[])
                 outputMatrix[1][0] = cluster_centroid[ii*dim+1];
                 outputMatrix[2][0] = 0.0;
                 outputMatrix[3][0] = 1.0;
-                showPoint();
-
-                if( calc_distance(dim, &cluster_centroid[ii*dim], last) > 40000.0 )
-                {
-                    //printf("y = %lf\n", last[1]);
-                    if( last[1] != 0.0 )
-                    {
-                        if ( lo_send(t, "/radar", "iii", 7, (int)( (last[0]-Xmin)/2.5 ), (int)( (Ymin+last[1])/-2.5) ) == -1 )
-                            printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                        else if(1)
-                            printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
-                    }
-                    last[0] = cluster_centroid[ii*dim];
-                    last[1] = cluster_centroid[ii*dim+1];
-                }
-                else
-                {
-                    last[0] = ( cluster_centroid[ii*dim] + last[0] ) / 2.0;
-                    last[1] = ( cluster_centroid[ii*dim+1] + last[1] ) / 2.0;
-                }
+                //showPoint();
 
                 /*
                 setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
@@ -208,24 +190,18 @@ int main(int argc, char *argv[])
                 setUpRotationMatrix(0.0, 0.0, 1.0, 0.0);
                 multiplyMatrix();
                 showPoint();
-                setUpRotationMatrix(0.0, 0.0, 0.0, 1.0);
+                */
+                setUpRotationMatrix(0.0, 0.0, 0.0, 0.98);
                 multiplyMatrix();
                 showPoint();
-                */
-
+                
+				if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
+                    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                else if(0)
+                    printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
+                
             }
         }
-
-        if( last[1] != 0.0 )
-        {
-            if ( lo_send(t, "/radar", "iii", 7, (int)( (last[0]-Xmin)/2.5 ), (int)( (Ymin+last[1])/-2.5) ) == -1 )
-                printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-            else
-                printf("x = %lf, y = %lf\n", last[0], last[1]);
-            last[0] = 0.0;
-            last[1] = 0.0;
-        }
-
 
         /*
         for (int ii = 0; ii < n; ii++)
