@@ -19,10 +19,10 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 185.0
-#define Xmax 1482.0
-#define Ymin 2000.0
-#define Ymax 3493.0
+#define Xmin 253.0
+#define Xmax 1474.0
+#define Ymin 2136.0
+#define Ymax 3499.0
 /*
 void* say_hello(void* data)
 {
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     int last_step = urg_rad2step(&urg, +22);
     */
     int first_step = urg_deg2step(&urg, 0.0); //urg_rad2step(&urg, 0);
-    int last_step = urg_deg2step(&urg, 30.0); //urg_rad2step(&urg, 0.65);
+    int last_step = urg_deg2step(&urg, 37.0); //urg_rad2step(&urg, 0.65);
     int skip_step = 0;
     int ret = urg_set_scanning_parameter(&urg, first_step, last_step, skip_step);
     // \todo check error code
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
             kk = 0;
             last[0] = 0.0;
             last[1] = 0.0;
-			counter = 0;
+            counter = 0;
         }
 
         // Outputs X-Y coordinates
@@ -136,29 +136,29 @@ int main(int argc, char *argv[])
                 X[kk*dim+1] = y;
                 if( (distprint = calc_distance(dim, &X[kk*dim], last)) > 40000.0 )
                 {
-					if(last[1] == 0.0 || counter >= 2)
-					{
+                    if(last[1] == 0.0 || counter >= 2)
+                    {
                         cluster_centroid[k*dim] = x;
                         cluster_centroid[k*dim+1] = y;
                         k++;
-						last[0] = x;
+                        last[0] = x;
                         last[1] = y;
-					}
-					else
-					{
-					    counter++;	
-					}
+                    }
+                    else
+                    {
+                        counter++;
+                    }
                 }
-				else
-				{
-				    last[0] = x;
-                    last[1] = y;	
-				}
+                else
+                {
+                    last[0] = x;
+                    last[1] = y;
+                }
                 kk++;
 
             }
         }
-        
+
         //kmeans(dim, X, kk, k, cluster_centroid, cluster_assignment_final);
 
         if(k>0)
