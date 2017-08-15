@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 
         if( last[1] != 0.0 )
         {
-            if ( lo_send(t, "/radar", "iii", 7, (int)( (last[0]-Xmin)/2.24 ), (int)( (Ymin+last[1])/-2.24) ) == -1 )
+            if ( lo_send(t, "/radar", "iii", 7, (int)( (last[0]-Xmin)/2.5 ), (int)( (Ymin+last[1])/-2.5) ) == -1 )
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
             else
                 printf("x = %lf, y = %lf\n", last[0], last[1]);

@@ -20,8 +20,8 @@
 #include "rotate.h"
 
 #define Xmin 185.0
-#define Xmax 2000.0
-#define Ymin 1482.0
+#define Xmax 1482.0
+#define Ymin 2000.0
 #define Ymax 3493.0
 /*
 void* say_hello(void* data)
