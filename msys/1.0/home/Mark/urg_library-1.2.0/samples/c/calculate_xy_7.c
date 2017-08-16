@@ -19,7 +19,7 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 236.0
+#define Xmin 301.0
 #define Xmax 1469.0
 #define Ymin 2129.0
 #define Ymax 3476.0
