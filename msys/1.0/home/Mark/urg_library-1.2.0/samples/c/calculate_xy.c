@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     double last[2];
     double unitX = 0.0;
     double unitY = 0.0;
+    unsigned short *intensity = NULL;
     unitX = (Xmax - Xmin) / 448;
     unitY = (Ymax - Ymin) / 448;
     if (open_urg_sensor(&urg, argc, argv) < 0) {
@@ -63,7 +64,11 @@ int main(int argc, char *argv[])
         perror("urg_max_index()");
         return 1;
     }
-
+    intensity = malloc(urg_max_data_size(&urg) * sizeof(intensity[0]));
+    if (!intensity) {
+        perror("urg_max_index()");
+        return 1;
+    }
     // \~english Defines the measurement scope (start, end steps)
     // \~english Defines a measurement scope of 90 [deg] at the front of the sensor, and no step grouping in this example
     /*
@@ -92,8 +97,8 @@ int main(int argc, char *argv[])
     while(1)
     {
         // Gets measurement data
-        urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
-        n = urg_get_distance(&urg, data, &time_stamp);
+        urg_start_measurement(&urg, URG_DISTANCE_INTENSITY, scan_times, skip_scan);
+        n = urg_get_distance_intensity(&urg, data, intensity, &time_stamp); //urg_get_distance(&urg, data, &time_stamp);
         sleep(0.1);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
@@ -139,8 +144,9 @@ int main(int argc, char *argv[])
                 X[kk*dim+1] = y;
                 if( (distprint = calc_distance(dim, &X[kk*dim], last)) > 40000.0 )
                 {
-                    if(last[1] == 0.0 || counter >= 3)
+                    if( intensity[i] > 1000 && counter >= 3 ) // last[1] == 0.0 )
                     {
+                        //printf("%d\n", intensity[i]);
                         cluster_centroid[k*dim] = x;
                         cluster_centroid[k*dim+1] = y;
                         k++;
@@ -191,7 +197,7 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
                 */
-                setUpRotationMatrix(0.0, 0.0, 0.0, 0.98);
+                setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
                 multiplyMatrix();
                 showPoint();
 
@@ -215,6 +221,7 @@ int main(int argc, char *argv[])
     }
     // Disconnects
     free(data);
+    free(intensity);
     urg_close(&urg);
 
 #if defined(URG_MSC)
