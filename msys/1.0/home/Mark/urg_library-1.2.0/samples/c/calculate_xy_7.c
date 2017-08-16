@@ -51,9 +51,9 @@ int main(int argc, char *argv[])
     int   *cluster_assignment_final;
     double last[2];
     double unitX = 0.0;
-	double unitY = 0.0;
-	unitX = (Xmax - Xmin) / 448;
-	unitY = (Ymax - Ymin) / 448;
+    double unitY = 0.0;
+    unitX = (Xmax - Xmin) / 448;
+    unitY = (Ymax - Ymin) / 448;
     if (open_urg_sensor(&urg, argc, argv) < 0) {
         return 1;
     }
@@ -195,11 +195,11 @@ int main(int argc, char *argv[])
                 showPoint();
                 */
 
-				if ( lo_send(t, "/radar", "iii", 7, (int)( (outputMatrix[0][0]-Xmin)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
+                if ( lo_send(t, "/radar", "iii", 7, (int)( (outputMatrix[0][0]-Xmin)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
                     printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
-                
+
             }
         }
 
