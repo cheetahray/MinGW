@@ -19,9 +19,9 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 261.0
+#define Xmin 236.0
 #define Xmax 1469.0
-#define Ymin 2164.0
+#define Ymin 2129.0
 #define Ymax 3476.0
 /*
 void* say_hello(void* data)
@@ -137,9 +137,9 @@ int main(int argc, char *argv[])
                 double distprint;
                 X[kk*dim] = x;
                 X[kk*dim+1] = y;
-                if( (distprint = calc_distance(dim, &X[kk*dim], last)) > 40000.0 )
+                if( (distprint = calc_distance(dim, &X[kk*dim], last)) > 50000.0 )
                 {
-                    if(last[1] == 0.0 || counter >= 3)
+                    if(last[1] == 0.0 || counter >= 5)
                     {
                         cluster_centroid[k*dim] = x;
                         cluster_centroid[k*dim+1] = y;
