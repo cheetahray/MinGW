@@ -19,10 +19,10 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 260.0
-#define Xmax 1469.0
-#define Ymin 2129.0
-#define Ymax 3476.0
+#define Xmin 220.0
+#define Xmax 1367.0
+#define Ymin 2171.0
+#define Ymax 3479.0
 /*
 void* say_hello(void* data)
 {
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
                 outputMatrix[1][0] = cluster_centroid[ii*dim+1];
                 outputMatrix[2][0] = 0.0;
                 outputMatrix[3][0] = 1.0;
-                showPoint();
+                //showPoint();
 
                 /*
                 setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
@@ -190,12 +190,12 @@ int main(int argc, char *argv[])
                 setUpRotationMatrix(0.0, 0.0, 1.0, 0.0);
                 multiplyMatrix();
                 showPoint();
-                setUpRotationMatrix(0.0, 0.0, 0.0, 1.0);
+                */
+                setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
                 multiplyMatrix();
                 showPoint();
-                */
 
-                if ( lo_send(t, "/radar", "iii", 7, (int)( (outputMatrix[0][0]-Xmin)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
+                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
                     printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
