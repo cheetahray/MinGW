@@ -4,7 +4,7 @@
   Having the X axis aligned to the front step of the sensor, calculates the coordinates for measurement data
   \author Satofumi KAMIMURA
 
-  $Id: calculate_xy.c,v e5d1719877a2 2015/05/07 04:12:14 jun $
+  $Id: calculate_xy.c,v e5d1719877a2 2015/n05/07 04:12:14 jun $
 */
 
 #include "urg_sensor.h"
@@ -19,7 +19,7 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 180.0
+#define Xmin 200.0
 #define Xmax 1367.0
 #define Ymin 2171.0
 #define Ymax 3479.0
@@ -52,7 +52,6 @@ int main(int argc, char *argv[])
     double last[2];
     double unitX = 0.0;
     double unitY = 0.0;
-    unsigned short *intensity = NULL;
     unitX = (Xmax - Xmin) / 448;
     unitY = (Ymax - Ymin) / 448;
     if (open_urg_sensor(&urg, argc, argv) < 0) {
@@ -64,11 +63,7 @@ int main(int argc, char *argv[])
         perror("urg_max_index()");
         return 1;
     }
-    intensity = malloc(urg_max_data_size(&urg) * sizeof(intensity[0]));
-    if (!intensity) {
-        perror("urg_max_index()");
-        return 1;
-    }
+
     // \~english Defines the measurement scope (start, end steps)
     // \~english Defines a measurement scope of 90 [deg] at the front of the sensor, and no step grouping in this example
     /*
@@ -97,8 +92,8 @@ int main(int argc, char *argv[])
     while(1)
     {
         // Gets measurement data
-        urg_start_measurement(&urg, URG_DISTANCE_INTENSITY, scan_times, skip_scan);
-        n = urg_get_distance_intensity(&urg, data, intensity, &time_stamp); //urg_get_distance(&urg, data, &time_stamp);
+        urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
+        n = urg_get_distance(&urg, data, &time_stamp);
         sleep(0.1);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
@@ -144,9 +139,8 @@ int main(int argc, char *argv[])
                 X[kk*dim+1] = y;
                 if( (distprint = calc_distance(dim, &X[kk*dim], last)) > 40000.0 )
                 {
-                    if( intensity[i] > 1000 && counter >= 3 ) // last[1] == 0.0 )
+                    if( counter >= 3 ) // last[1] == 0.0 )
                     {
-                        //printf("%d\n", intensity[i]);
                         cluster_centroid[k*dim] = x;
                         cluster_centroid[k*dim+1] = y;
                         k++;
@@ -201,7 +195,7 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
 
-                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
+                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin-20)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
                     printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
@@ -221,7 +215,6 @@ int main(int argc, char *argv[])
     }
     // Disconnects
     free(data);
-    free(intensity);
     urg_close(&urg);
 
 #if defined(URG_MSC)

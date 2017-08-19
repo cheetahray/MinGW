@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     int i;
     int n;
     //int dim = 2;
-    double *X, *Y;
+    int *X, *Y;
     /*
     int k, kk;
     double cluster_centroid[32];
@@ -105,8 +105,8 @@ int main(int argc, char *argv[])
         else
         {
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
-            X = (double *)malloc(sizeof(double) /* * dim */ * n );
-            Y = (double *)malloc(sizeof(double) /* * dim */ * n );
+            X = (int *)malloc(sizeof(int) * n );
+            Y = (int *)malloc(sizeof(int) * n );
             counter = 0;
         }
 
@@ -129,20 +129,20 @@ int main(int argc, char *argv[])
             if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
                 double distprint;
-                X[counter] = x;
-                Y[counter] = y;
+                X[counter] = (int)x;
+                Y[counter] = (int)y;
                 counter++;
             }
         }
-        qsort (X, n, sizeof(double), compare);
-        qsort (Y, n, sizeof(double), compare);
+        qsort (X, n, sizeof(int), compare);
+        qsort (Y, n, sizeof(int), compare);
 
-                inputMatrix[0][0] = X[0];
-                inputMatrix[1][0] = Y[0];
+                inputMatrix[0][0] = (double)X[0];
+                inputMatrix[1][0] = (double)Y[0];
                 inputMatrix[2][0] = 0.0;
                 inputMatrix[3][0] = 1.0;
-                outputMatrix[0][0] = X[0];
-                outputMatrix[1][0] = Y[0];
+                outputMatrix[0][0] = (double)X[0];
+                outputMatrix[1][0] = (double)Y[0];
                 outputMatrix[2][0] = 0.0;
                 outputMatrix[3][0] = 1.0;
                 //showPoint();
@@ -159,11 +159,9 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
 
-                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin-20)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
+                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin-20.0)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                else if(0)
-                    printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
-
+                
         free(X);
     }
     // Disconnects

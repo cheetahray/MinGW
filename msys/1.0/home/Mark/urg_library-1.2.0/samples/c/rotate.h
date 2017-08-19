@@ -7,6 +7,7 @@
 float inputMatrix[4][1];
 float outputMatrix[4][1];
 
+int compare (const void * a, const void * b);
 void showPoint();
 void multiplyMatrix();
 void setUpRotationMatrix(float angle, float u, float v, float w);

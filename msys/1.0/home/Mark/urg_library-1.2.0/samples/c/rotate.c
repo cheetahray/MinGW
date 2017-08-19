@@ -14,6 +14,11 @@ Point points;
 float rotationMatrix[4][4];
 //float inputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0};
 //float outputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0}; 
+
+int compare (const void * a, const void * b)
+{
+  return ( *(int*)a - *(int*)b );
+}
  
 void showPoint(){
     printf("(%lf,%lf,%lf)\n", outputMatrix[0][0], outputMatrix[1][0], outputMatrix[2][0]);  
