@@ -44,14 +44,14 @@ int main(int argc, char *argv[])
     long time_stamp;
     int i;
     int n;
-    //int dim = 2;
+    int dim = 2;
     int *X, *Y;
     /*
     int k, kk;
     double cluster_centroid[32];
     int   *cluster_assignment_final;
-    double last[2];
     */
+    double last[2];
     double unitX = 0.0;
     double unitY = 0.0;
     unitX = (Xmax - Xmin) / 448;
@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
     int scan_times = 1;
     int skip_scan = 0;
     int counter = 0;
+	int howmany = 0;
     /*
     pthread_t t1;
 
@@ -107,7 +108,10 @@ int main(int argc, char *argv[])
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
             X = (int *)malloc(sizeof(int) * n );
             Y = (int *)malloc(sizeof(int) * n );
+			last[0] = 0.0;
+			last[1] = 0.0;
             counter = 0;
+			howmany = 0;
         }
 
         // Outputs X-Y coordinates
@@ -139,6 +143,7 @@ int main(int argc, char *argv[])
 
         if(counter > 0)
         {	
+	            double now[2];
                 printf("counter = %ld\n", counter);	
                 inputMatrix[0][0] = (double)X[0];
                 inputMatrix[1][0] = (double)Y[0];
@@ -162,8 +167,20 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
 
-                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin-20.0)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
-                    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+				now[0] = outputMatrix[0][0];
+				now[1] = outputMatrix[1][0];
+				
+				if( calc_distance(dim, now, last) < 2500.0 )
+				{
+					if (howmany > 5)
+					    if ( lo_send(t, "/radar", "iii", 5, (int)( (now[0]-Xmin-20.0)/unitX ), (int)( (Ymin+now[1])/-unitY) ) == -1 )
+                            printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+						else if(1)
+							printf("x = %lf, y = %lf\n", now[0], now[1]);
+					else
+						howmany++;
+				}	
+                
         }
         
         free(X);
