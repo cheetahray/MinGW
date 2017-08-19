@@ -128,15 +128,18 @@ int main(int argc, char *argv[])
             x = distance * sin(radian);
             if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
-                double distprint;
                 X[counter] = (int)x;
                 Y[counter] = (int)y;
                 counter++;
             }
         }
-        qsort (X, n, sizeof(int), compare);
-        qsort (Y, n, sizeof(int), compare);
+        
+		qsort (X, counter, sizeof(int), compare);
+        qsort (Y, counter, sizeof(int), compare);
 
+        if(counter > 0)
+        {	
+                printf("counter = %ld\n", counter);	
                 inputMatrix[0][0] = (double)X[0];
                 inputMatrix[1][0] = (double)Y[0];
                 inputMatrix[2][0] = 0.0;
@@ -161,7 +164,8 @@ int main(int argc, char *argv[])
 
                 if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin-20.0)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                
+        }
+        
         free(X);
     }
     // Disconnects
