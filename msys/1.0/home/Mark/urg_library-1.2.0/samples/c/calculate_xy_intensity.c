@@ -19,7 +19,7 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 200.0
+#define Xmin 180.0
 #define Xmax 1367.0
 #define Ymin 2171.0
 #define Ymax 3479.0
@@ -44,16 +44,15 @@ int main(int argc, char *argv[])
     long time_stamp;
     int i;
     int n;
-    //int dim = 2;
-    double *X, *Y;
-    /*
+    int dim = 2;
+    double *X;
     int k, kk;
     double cluster_centroid[32];
     int   *cluster_assignment_final;
     double last[2];
-    */
     double unitX = 0.0;
     double unitY = 0.0;
+    unsigned short *intensity = NULL;
     unitX = (Xmax - Xmin) / 448;
     unitY = (Ymax - Ymin) / 448;
     if (open_urg_sensor(&urg, argc, argv) < 0) {
@@ -65,7 +64,11 @@ int main(int argc, char *argv[])
         perror("urg_max_index()");
         return 1;
     }
-
+    intensity = malloc(urg_max_data_size(&urg) * sizeof(intensity[0]));
+    if (!intensity) {
+        perror("urg_max_index()");
+        return 1;
+    }
     // \~english Defines the measurement scope (start, end steps)
     // \~english Defines a measurement scope of 90 [deg] at the front of the sensor, and no step grouping in this example
     /*
@@ -94,8 +97,8 @@ int main(int argc, char *argv[])
     while(1)
     {
         // Gets measurement data
-        urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
-        n = urg_get_distance(&urg, data, &time_stamp);
+        urg_start_measurement(&urg, URG_DISTANCE_INTENSITY, scan_times, skip_scan);
+        n = urg_get_distance_intensity(&urg, data, intensity, &time_stamp); //urg_get_distance(&urg, data, &time_stamp);
         sleep(0.1);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
@@ -105,14 +108,22 @@ int main(int argc, char *argv[])
         else
         {
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
-            X = (double *)malloc(sizeof(double) /* * dim */ * n );
-            Y = (double *)malloc(sizeof(double) /* * dim */ * n );
+            X = (double *)malloc(sizeof(double) * dim * n );
+            for (int ii = 0; ii < 16; ii++)
+            {
+                cluster_centroid[ii*dim] = 0.0;
+                cluster_centroid[ii*dim+1] = 0.0;
+            }
+            k = 0;
+            kk = 0;
+            last[0] = 0.0;
+            last[1] = 0.0;
             counter = 0;
         }
 
         // Outputs X-Y coordinates
         urg_distance_min_max(&urg, &min_distance, &max_distance);
-        for (i = 0; i < n; ++i)
+        for (i = 0; i < n && k < 16; ++i)
         {
             long distance = data[i];
             double radian;
@@ -129,20 +140,51 @@ int main(int argc, char *argv[])
             if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
                 double distprint;
-                X[counter] = x;
-                Y[counter] = y;
-                counter++;
+                X[kk*dim] = x;
+                X[kk*dim+1] = y;
+                if( (distprint = calc_distance(dim, &X[kk*dim], last)) > 40000.0 )
+                {
+                    if( intensity[i] > 1000 && counter >= 3 ) // last[1] == 0.0 )
+                    {
+                        //printf("%d\n", intensity[i]);
+                        cluster_centroid[k*dim] = x;
+                        cluster_centroid[k*dim+1] = y;
+                        k++;
+                        last[0] = x;
+                        last[1] = y;
+                    }
+                    else
+                    {
+                        counter++;
+                    }
+                }
+                else
+                {
+                    last[0] = x;
+                    last[1] = y;
+                }
+                kk++;
+
             }
         }
-        qsort (X, n, sizeof(double), compare);
-        qsort (Y, n, sizeof(double), compare);
 
-                inputMatrix[0][0] = X[0];
-                inputMatrix[1][0] = Y[0];
+        //kmeans(dim, X, kk, k, cluster_centroid, cluster_assignment_final);
+
+        if(k>0)
+        {
+            printf("%ld", k);
+        }
+
+        for (int ii = 0; ii < k; ii++)
+        {
+            if(1) //( fabs(cluster_centroid[ii*dim]) > Xmin || fabs(cluster_centroid[ii*dim+1]) > Ymin ) && fabs(cluster_centroid[ii*dim]) < Xmax && fabs(cluster_centroid[ii*dim+1]) < Ymax )
+            {
+                inputMatrix[0][0] = cluster_centroid[ii*dim];
+                inputMatrix[1][0] = cluster_centroid[ii*dim+1];
                 inputMatrix[2][0] = 0.0;
                 inputMatrix[3][0] = 1.0;
-                outputMatrix[0][0] = X[0];
-                outputMatrix[1][0] = Y[0];
+                outputMatrix[0][0] = cluster_centroid[ii*dim];
+                outputMatrix[1][0] = cluster_centroid[ii*dim+1];
                 outputMatrix[2][0] = 0.0;
                 outputMatrix[3][0] = 1.0;
                 //showPoint();
@@ -159,15 +201,27 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
 
-                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin-20)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
+                if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
                     printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
 
+            }
+        }
+
+        /*
+        for (int ii = 0; ii < n; ii++)
+        {
+            printf("%ld, ", cluster_assignment_final);
+        }
+        */
+
+        //free(cluster_assignment_final);
         free(X);
     }
     // Disconnects
     free(data);
+    free(intensity);
     urg_close(&urg);
 
 #if defined(URG_MSC)
