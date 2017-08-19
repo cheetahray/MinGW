@@ -20,7 +20,7 @@
 #include "rotate.h"
 
 #define Xmin 246.0
-#define Xmax 1447.0
+#define Xmax 1427.0
 #define Ymin 2171.0
 #define Ymax 3477.0
 /*
@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
                 showPoint();
                 */
 
-                if ( lo_send(t, "/radar", "iii", 8, (int)( (Xmax+outputMatrix[0][0])/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
+                if ( lo_send(t, "/radar", "iii", 8, (int)( (Xmax+outputMatrix[0][0]-20)/unitX ), (int)( (Ymin+outputMatrix[1][0])/-unitY) ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
                     printf("ii = %d, x = %lf, y = %lf\n", ii, last[0], last[1]);
