@@ -19,10 +19,10 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 200.0
-#define Xmax 1367.0
-#define Ymin 2171.0
-#define Ymax 3479.0
+#define Xmin 217.0
+#define Xmax 1459.0
+#define Ymin 2173.0
+#define Ymax 3517.0
 /*
 void* say_hello(void* data)
 {
@@ -50,8 +50,8 @@ int main(int argc, char *argv[])
     int k, kk;
     double cluster_centroid[32];
     int   *cluster_assignment_final;
-    */
     double last[2];
+    */
     double unitX = 0.0;
     double unitY = 0.0;
     unitX = (Xmax - Xmin) / 448;
@@ -83,7 +83,6 @@ int main(int argc, char *argv[])
     int scan_times = 1;
     int skip_scan = 0;
     int counter = 0;
-	int howmany = 0;
     /*
     pthread_t t1;
 
@@ -108,10 +107,7 @@ int main(int argc, char *argv[])
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
             X = (int *)malloc(sizeof(int) * n );
             Y = (int *)malloc(sizeof(int) * n );
-			last[0] = 0.0;
-			last[1] = 0.0;
             counter = 0;
-			howmany = 0;
         }
 
         // Outputs X-Y coordinates
@@ -130,7 +126,7 @@ int main(int argc, char *argv[])
             radian = urg_index2rad(&urg, i);
             y = distance * cos(radian) * -1.0;
             x = distance * sin(radian);
-            if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
+			if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
                 X[counter] = (int)x;
                 Y[counter] = (int)y;
@@ -138,13 +134,12 @@ int main(int argc, char *argv[])
             }
         }
         
-		qsort (X, counter, sizeof(int), compare);
-        qsort (Y, counter, sizeof(int), compare);
-
+        qsort (X, counter, sizeof(int), compareA);
+        qsort (Y, counter, sizeof(int), compareD);
+        
         if(counter > 0)
-        {	
-	            double now[2];
-                printf("counter = %ld\n", counter);	
+        {    
+                //printf("counter = %ld\n", counter);    
                 inputMatrix[0][0] = (double)X[0];
                 inputMatrix[1][0] = (double)Y[0];
                 inputMatrix[2][0] = 0.0;
@@ -153,7 +148,7 @@ int main(int argc, char *argv[])
                 outputMatrix[1][0] = (double)Y[0];
                 outputMatrix[2][0] = 0.0;
                 outputMatrix[3][0] = 1.0;
-                //showPoint();
+                showPoint();
 
                 /*
                 setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
@@ -165,22 +160,11 @@ int main(int argc, char *argv[])
                 */
                 setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
                 multiplyMatrix();
-                showPoint();
+                //showPoint();
 
-				now[0] = outputMatrix[0][0];
-				now[1] = outputMatrix[1][0];
-				
-				if( calc_distance(dim, now, last) < 2500.0 )
-				{
-					if (howmany > 5)
-					    if ( lo_send(t, "/radar", "iii", 5, (int)( (now[0]-Xmin-20.0)/unitX ), (int)( (Ymin+now[1])/-unitY) ) == -1 )
-                            printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-						else if(1)
-							printf("x = %lf, y = %lf\n", now[0], now[1]);
-					else
-						howmany++;
-				}	
-                
+			if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin) / unitX + 42.0 ), (int)( (Ymin+outputMatrix[1][0]) / -unitY + 42.0 ) ) == -1 )
+			    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                    			
         }
         
         free(X);
