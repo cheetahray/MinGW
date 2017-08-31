@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
     */
     double unitX = 0.0;
     double unitY = 0.0;
-    unitX = (Xmax - Xmin) / 448;
-    unitY = (Ymax - Ymin) / 448;
+    unitX = (Xmax - Xmin) / 448.0;
+    unitY = (Ymax - Ymin) / 448.0;
     if (open_urg_sensor(&urg, argc, argv) < 0) {
         return 1;
     }
@@ -139,7 +139,8 @@ int main(int argc, char *argv[])
         
         if(counter > 0)
         {    
-                //printf("counter = %ld\n", counter);    
+            int aluanX = 0;
+            int aluanY = 0;
                 inputMatrix[0][0] = (double)X[0];
                 inputMatrix[1][0] = (double)Y[0];
                 inputMatrix[2][0] = 0.0;
@@ -148,7 +149,7 @@ int main(int argc, char *argv[])
                 outputMatrix[1][0] = (double)Y[0];
                 outputMatrix[2][0] = 0.0;
                 outputMatrix[3][0] = 1.0;
-                showPoint();
+                //showPoint();
 
                 /*
                 setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
@@ -161,10 +162,12 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
                 */
-                 
-			if ( lo_send(t, "/radar", "iii", 8, (int)( (outputMatrix[0][0]+Xmax) / unitX ), (int)( (Ymin+outputMatrix[1][0]) / -unitY ) ) == -1 )
+            aluanX = (int)( (outputMatrix[0][0]+Xmax) + 14.0 / unitX );
+            aluanY = (int)( (Ymin+outputMatrix[1][0]) + 14.0 / -unitY );            
+			if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
 			    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                    			
+            else if(1)
+                printf("%ld ,%ld\n", aluanX, aluanY);    			
         }
         
         free(X);
