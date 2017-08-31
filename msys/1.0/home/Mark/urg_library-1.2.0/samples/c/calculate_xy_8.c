@@ -19,10 +19,10 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 259.0
-#define Xmax 1499.0
-#define Ymin 2163.0
-#define Ymax 3486.0
+#define Xmin 212.0
+#define Xmax 1529.0
+#define Ymin 2128.0
+#define Ymax 3489.0
 /*
 void* say_hello(void* data)
 {
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
                 showPoint();
                 */
                  
-			if ( lo_send(t, "/radar", "iii", 8, (int)( (outputMatrix[0][0]+Xmax) / unitX + 28.0 ), (int)( (Ymin+outputMatrix[1][0]) / -unitY + 28.0 ) ) == -1 )
+			if ( lo_send(t, "/radar", "iii", 8, (int)( (outputMatrix[0][0]+Xmax) / unitX ), (int)( (Ymin+outputMatrix[1][0]) / -unitY ) ) == -1 )
 			    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     			
         }
