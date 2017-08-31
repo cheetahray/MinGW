@@ -162,8 +162,8 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
                 */
-            aluanX = (int)( (outputMatrix[0][0]+Xmax) + 14.0 / unitX );
-            aluanY = (int)( (Ymin+outputMatrix[1][0]) + 14.0 / -unitY );            
+            aluanX = (int)( (outputMatrix[0][0] + Xmax + 14.0) / unitX );
+            aluanY = (int)( (Ymin + outputMatrix[1][0] + 14.0) / -unitY );            
 			if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
 			    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
             else if(1)
