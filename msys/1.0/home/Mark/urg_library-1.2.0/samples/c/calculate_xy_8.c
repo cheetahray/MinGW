@@ -96,7 +96,6 @@ int main(int argc, char *argv[])
         // Gets measurement data
         urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
-        sleep(0.1);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
             urg_close(&urg);
@@ -162,12 +161,13 @@ int main(int argc, char *argv[])
                 multiplyMatrix();
                 showPoint();
                 */
-            aluanX = (int)( (outputMatrix[0][0] + Xmax + 14.0) / unitX );
-            aluanY = (int)( (Ymin + outputMatrix[1][0] + 14.0) / -unitY );            
+            aluanX = (int)( (outputMatrix[0][0] + Xmax + 28.0) / unitX );
+            aluanY = (int)( (Ymin + outputMatrix[1][0] + 7.0) / -unitY );            
 			if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
 			    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
             else if(1)
-                printf("%ld ,%ld\n", aluanX, aluanY);    			
+                printf("%ld ,%ld\n", aluanX, aluanY);
+            sleep(0.25);
         }
         
         free(X);
