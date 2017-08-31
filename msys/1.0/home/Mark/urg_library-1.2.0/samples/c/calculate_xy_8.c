@@ -19,10 +19,10 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 212.0
-#define Xmax 1529.0
-#define Ymin 2128.0
-#define Ymax 3489.0
+#define Xmin 320.0
+#define Xmax 1458.0
+#define Ymin 2151.0
+#define Ymax 3481.0
 /*
 void* say_hello(void* data)
 {
