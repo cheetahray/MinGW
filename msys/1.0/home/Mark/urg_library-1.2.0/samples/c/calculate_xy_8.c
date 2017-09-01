@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
         aluanX = XY[0];
         qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
         aluanY = XY[1];
-
+        printf("why2");
         if(counter > 0)
         {
             inputMatrix[0][0] = (double)XY[0];
@@ -169,6 +169,7 @@ int main(int argc, char *argv[])
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
             else if(1)
                 printf("%ld ,%ld\n", aluanX, aluanY);
+            printf("why3");
             sleep(1);
         }
 
