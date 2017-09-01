@@ -22,8 +22,8 @@
 
 #define Xmin 320.0
 #define Xmax 1458.0
-#define Ymin 2151.0
-#define Ymax 3481.0
+#define Ymin 2317.0
+#define Ymax 3470.0
 /*
 void* say_hello(void* data)
 {
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     */
     lo_address t = lo_address_new("127.0.0.1", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 100; // length of time to sleep, in miliseconds
+    int milisec = 200; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
@@ -104,7 +104,6 @@ int main(int argc, char *argv[])
         // Gets measurement data
         urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
-        nanosleep(&req, (struct timespec *)NULL);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
             urg_close(&urg);
@@ -176,6 +175,7 @@ int main(int argc, char *argv[])
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
             else if(0)
                 printf("%ld ,%ld\n", aluanX, aluanY);
+            nanosleep(&req, (struct timespec *)NULL);
         }
 
         free(XY);
