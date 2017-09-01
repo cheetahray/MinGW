@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            //showPoint();
+            showPoint();
 
             /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-            else if(1)
+            else if(0)
                 printf("%ld ,%ld\n", aluanX, aluanY);
         }
 
