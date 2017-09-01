@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
-    
+
     while(1)
     {
         // Gets measurement data
@@ -138,17 +138,17 @@ int main(int argc, char *argv[])
             {
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
-	        }
+            }
         }
-        
+
         if(counter >= 2)
         {
             printf("why2");
-			qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
+            qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
             aluanX = XY[0];
             qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
             aluanY = XY[1];
-        
+
             inputMatrix[0][0] = (double)XY[0];
             inputMatrix[1][0] = (double)XY[1];
             inputMatrix[2][0] = 0.0;

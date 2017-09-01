@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <time.h>
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
@@ -54,8 +55,8 @@ int main(int argc, char *argv[])
     */
     double unitX = 0.0;
     double unitY = 0.0;
-    unitX = (Xmax - Xmin) / 448;
-    unitY = (Ymax - Ymin) / 448;
+    unitX = (Xmax - Xmin) / 448.0;
+    unitY = (Ymax - Ymin) / 448.0;
     if (open_urg_sensor(&urg, argc, argv) < 0) {
         return 1;
     }
@@ -91,12 +92,17 @@ int main(int argc, char *argv[])
     */
     lo_address t = lo_address_new("127.0.0.1", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
+    int milisec = 100; // length of time to sleep, in miliseconds
+    struct timespec req = {0};
+    req.tv_sec = 0;
+    req.tv_nsec = milisec * 1000000L;
+
     while(1)
     {
         // Gets measurement data
         urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
-        sleep(0.1);
+        nanosleep(&req, (struct timespec *)NULL);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
             urg_close(&urg);
@@ -126,47 +132,46 @@ int main(int argc, char *argv[])
             radian = urg_index2rad(&urg, i);
             y = distance * cos(radian) * -1.0;
             x = distance * sin(radian);
-			if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
+            if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
                 X[counter] = (int)x;
                 Y[counter] = (int)y;
                 counter++;
             }
         }
-        
-        qsort (X, counter, sizeof(int), compareA);
-        qsort (Y, counter, sizeof(int), compareD);
-        
-        if(counter > 0)
-        {    
-                //printf("counter = %ld\n", counter);    
-                inputMatrix[0][0] = (double)X[0];
-                inputMatrix[1][0] = (double)Y[0];
-                inputMatrix[2][0] = 0.0;
-                inputMatrix[3][0] = 1.0;
-                outputMatrix[0][0] = (double)X[0];
-                outputMatrix[1][0] = (double)Y[0];
-                outputMatrix[2][0] = 0.0;
-                outputMatrix[3][0] = 1.0;
-                showPoint();
 
-                /*
-                setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
-                multiplyMatrix();
-                showPoint();
-                setUpRotationMatrix(0.0, 0.0, 1.0, 0.0);
-                multiplyMatrix();
-                showPoint();
-                setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
-                multiplyMatrix();
-                showPoint();
-                */
-                 
-			if ( lo_send(t, "/radar", "iii", 7, (int)( (outputMatrix[0][0]-Xmin) / unitX + 14.0 ), (int)( (Ymin+outputMatrix[1][0]) / -unitY + 28.0 ) ) == -1 )
-			    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                    			
+        if(counter > 0)
+        {
+            qsort (X, counter, sizeof(int), compareA);
+            qsort (Y, counter, sizeof(int), compareD);
+
+            inputMatrix[0][0] = (double)X[0];
+            inputMatrix[1][0] = (double)Y[0];
+            inputMatrix[2][0] = 0.0;
+            inputMatrix[3][0] = 1.0;
+            outputMatrix[0][0] = (double)X[0];
+            outputMatrix[1][0] = (double)Y[0];
+            outputMatrix[2][0] = 0.0;
+            outputMatrix[3][0] = 1.0;
+            showPoint();
+
+            /*
+            setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
+            multiplyMatrix();
+            showPoint();
+            setUpRotationMatrix(0.0, 0.0, 1.0, 0.0);
+            multiplyMatrix();
+            showPoint();
+            setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
+            multiplyMatrix();
+            showPoint();
+            */
+
+            if ( lo_send(t, "/radar", "iii", 7, (int)( (outputMatrix[0][0]-Xmin) / unitX + 14.0 ), (int)( (Ymin+outputMatrix[1][0]) / -unitY + 28.0 ) ) == -1 )
+                printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+
         }
-        
+
         free(X);
     }
     // Disconnects
