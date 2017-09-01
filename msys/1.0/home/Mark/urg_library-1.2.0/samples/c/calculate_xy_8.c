@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
         urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
         printf("why");
-        sleep(0.5);
+        nanosleep(500000);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
             urg_close(&urg);
@@ -132,16 +132,17 @@ int main(int argc, char *argv[])
             {
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
-            }
+	        }
         }
-
-        qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
-        aluanX = XY[0];
-        qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
-        aluanY = XY[1];
-        printf("why2");
-        if(counter > 0)
+        
+        if(counter >= 2)
         {
+            printf("why2");
+			qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
+            aluanX = XY[0];
+            qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
+            aluanY = XY[1];
+        
             inputMatrix[0][0] = (double)XY[0];
             inputMatrix[1][0] = (double)XY[1];
             inputMatrix[2][0] = 0.0;
