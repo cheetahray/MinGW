@@ -15,14 +15,24 @@ float rotationMatrix[4][4];
 //float inputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0};
 //float outputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0}; 
 
-int compareA (const void * a, const void * b)
+int compareXA (const void * a, const void * b)
 {
   return ( *(int*)a - *(int*)b );
 }
 
-int compareD (const void * a, const void * b)
+int compareXD (const void * a, const void * b)
 {
   return ( *(int*)b - *(int*)a );
+}
+
+int compareYA (const void * a, const void * b)
+{
+  return ( *((int*)a+1) - *((int*)b+1) );
+}
+
+int compareYD (const void * a, const void * b)
+{
+  return ( *((int*)b+1) - *((int*)a+1) );
 }
  
 void showPoint(){
