@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     */
     lo_address t = lo_address_new("127.0.0.1", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 500; // length of time to sleep, in miliseconds
+    int milisec = 100; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
