@@ -104,7 +104,6 @@ int main(int argc, char *argv[])
         // Gets measurement data
         urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
-        printf("why");
         nanosleep(&req, (struct timespec *)NULL);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
@@ -141,14 +140,16 @@ int main(int argc, char *argv[])
             }
         }
 
-        if(counter >= 2)
+        if(counter > 0)
         {
-            printf("why2");
-            qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
-            aluanX = XY[0];
-            qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
-            aluanY = XY[1];
-
+            if(counter >= 2)
+            {
+                printf("why2");
+                qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
+                aluanX = XY[0];
+                qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
+                aluanY = XY[1];
+            }
             inputMatrix[0][0] = (double)XY[0];
             inputMatrix[1][0] = (double)XY[1];
             inputMatrix[2][0] = 0.0;
@@ -176,8 +177,6 @@ int main(int argc, char *argv[])
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
             else if(1)
                 printf("%ld ,%ld\n", aluanX, aluanY);
-            printf("why3");
-            sleep(1);
         }
 
         free(XY);
