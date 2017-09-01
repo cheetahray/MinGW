@@ -144,18 +144,17 @@ int main(int argc, char *argv[])
         {
             if(counter >= 2)
             {
-                printf("why2");
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
                 aluanX = XY[0];
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
                 aluanY = XY[1];
             }
-            inputMatrix[0][0] = (double)XY[0];
-            inputMatrix[1][0] = (double)XY[1];
+            inputMatrix[0][0] = (double)aluanX;
+            inputMatrix[1][0] = (double)aluanY;
             inputMatrix[2][0] = 0.0;
             inputMatrix[3][0] = 1.0;
-            outputMatrix[0][0] = (double)XY[0];
-            outputMatrix[1][0] = (double)XY[1];
+            outputMatrix[0][0] = (double)aluanX;
+            outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
             //showPoint();
