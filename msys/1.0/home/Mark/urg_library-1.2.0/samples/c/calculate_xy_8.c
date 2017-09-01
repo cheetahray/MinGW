@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <time.h>
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
@@ -93,13 +94,18 @@ int main(int argc, char *argv[])
     */
     lo_address t = lo_address_new("127.0.0.1", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
+    int milisec = 500; // length of time to sleep, in miliseconds
+    struct timespec req = {0};
+    req.tv_sec = 0;
+    req.tv_nsec = milisec * 1000000L;
+    
     while(1)
     {
         // Gets measurement data
         urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
         printf("why");
-        nanosleep(500000);
+        nanosleep(&req, (struct timespec *)NULL);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
             urg_close(&urg);
