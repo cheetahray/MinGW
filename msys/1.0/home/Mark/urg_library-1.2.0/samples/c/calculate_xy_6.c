@@ -142,8 +142,8 @@ int main(int argc, char *argv[])
 
         if(counter > 0)
         {
-            qsort (X, counter, sizeof(int), compareA);
-            qsort (Y, counter, sizeof(int), compareD);
+            qsort (X, counter, sizeof(int), compareXA);
+            qsort (Y, counter, sizeof(int), compareXD);
             
             inputMatrix[0][0] = (double)X[0];
             inputMatrix[1][0] = (double)Y[0];
