@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
             setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
             multiplyMatrix();
             //showPoint();
-            aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
+            aluanX = (int)( (outputMatrix[0][0] - Xmin) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             if ( lo_send(t, "/radar", "iii", 5, aluanX, aluanY ) == -1 )
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
