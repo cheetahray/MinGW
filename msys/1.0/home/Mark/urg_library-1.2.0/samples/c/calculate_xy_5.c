@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     int i;
     int n;
     int dim = 2;
-    int *X, *Y;
+    int *XY;
     /*
     int k, kk;
     double cluster_centroid[32];
@@ -84,6 +84,8 @@ int main(int argc, char *argv[])
     int scan_times = 1;
     int skip_scan = 0;
     int counter = 0;
+    int aluanX = 0;
+    int aluanY = 0;
     /*
     pthread_t t1;
 
@@ -110,8 +112,7 @@ int main(int argc, char *argv[])
         else
         {
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
-            X = (int *)malloc(sizeof(int) * n );
-            Y = (int *)malloc(sizeof(int) * n );
+            XY = (int *)malloc( (sizeof(int) * n) << 1 );
             counter = 0;
         }
 
@@ -133,23 +134,26 @@ int main(int argc, char *argv[])
             x = distance * sin(radian);
             if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
-                X[counter] = (int)x;
-                Y[counter] = (int)y;
-                counter++;
+                XY[counter++] = (int)x;
+                XY[counter++] = (int)y;
             }
         }
 
         if(counter > 0)
         {
-            qsort (X, counter, sizeof(int), compareXA);
-            qsort (Y, counter, sizeof(int), compareXD);
-
-            inputMatrix[0][0] = (double)X[0];
-            inputMatrix[1][0] = (double)Y[0];
+            if(counter >= 2)
+            {
+                qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
+                aluanX = XY[0];
+                qsort (XY, counter >> 1, sizeof(int) << 1, compareXA);
+                aluanY = XY[1];
+            }
+            inputMatrix[0][0] = (double)aluanX;
+            inputMatrix[1][0] = (double)aluanY;
             inputMatrix[2][0] = 0.0;
             inputMatrix[3][0] = 1.0;
-            outputMatrix[0][0] = (double)X[0];
-            outputMatrix[1][0] = (double)Y[0];
+            outputMatrix[0][0] = (double)aluanX;
+            outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
             showPoint();
@@ -165,13 +169,16 @@ int main(int argc, char *argv[])
             setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
             multiplyMatrix();
             //showPoint();
-
-            if ( lo_send(t, "/radar", "iii", 5, (int)( (outputMatrix[0][0]-Xmin) / unitX + 36.0 ), (int)( (Ymin+outputMatrix[1][0]) / -unitY + 42.0 ) ) == -1 )
+            aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
+            aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
+            if ( lo_send(t, "/radar", "iii", 5, aluanX, aluanY ) == -1 )
                 printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+            else if(0)
+                printf("%ld ,%ld\n", aluanX, aluanY);
             nanosleep(&req, (struct timespec *)NULL);
         }
 
-        free(X);
+        free(XY);
     }
     // Disconnects
     free(data);
