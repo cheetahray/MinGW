@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     pthread_create(&t1,NULL,say_hello,"hello from 1");
     pthread_join(t1,NULL);
     */
-    lo_address t = lo_address_new("192.168.12.252", "12002");
+    lo_address t = lo_address_new("127.0.0.1", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
     int milisec = 200; // length of time to sleep, in miliseconds
     struct timespec req = {0};
