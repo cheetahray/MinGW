@@ -20,8 +20,8 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 230.0
-#define Xmax 1399.0
+#define Xmin 213.0
+#define Xmax 1380.0
 #define Ymin 2208.0
 #define Ymax 3448.0
 /*
