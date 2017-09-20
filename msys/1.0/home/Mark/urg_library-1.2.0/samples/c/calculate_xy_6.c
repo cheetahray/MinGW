@@ -20,7 +20,7 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 213.0
+#define Xmin 230.0
 #define Xmax 1399.0
 #define Ymin 2208.0
 #define Ymax 3448.0
@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
     int n;
     int dim = 2;
     int *XY;
+    int ghost = 0;
     /*
     int k, kk;
     double cluster_centroid[32];
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
     */
     lo_address t = lo_address_new("192.168.0.252", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 100; // length of time to sleep, in miliseconds
+    int milisec = 10; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
@@ -141,41 +142,45 @@ int main(int argc, char *argv[])
 
         if(counter > 0)
         {
-            if(counter >= 2)
+            if(ghost++ > 2)
             {
-                qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
-                aluanX = XY[0];
-                qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
-                aluanY = XY[1];
-            }
-            inputMatrix[0][0] = (double)aluanX;
-            inputMatrix[1][0] = (double)aluanY;
-            inputMatrix[2][0] = 0.0;
-            inputMatrix[3][0] = 1.0;
-            outputMatrix[0][0] = (double)aluanX;
-            outputMatrix[1][0] = (double)aluanY;
-            outputMatrix[2][0] = 0.0;
-            outputMatrix[3][0] = 1.0;
-            showPoint();
+                if(counter >= 2)
+                {
+                    qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
+                    aluanX = XY[0];
+                    qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
+                    aluanY = XY[1];
+                }
+                inputMatrix[0][0] = (double)aluanX;
+                inputMatrix[1][0] = (double)aluanY;
+                inputMatrix[2][0] = 0.0;
+                inputMatrix[3][0] = 1.0;
+                outputMatrix[0][0] = (double)aluanX;
+                outputMatrix[1][0] = (double)aluanY;
+                outputMatrix[2][0] = 0.0;
+                outputMatrix[3][0] = 1.0;
+                showPoint();
 
-            /*
-            setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
-            multiplyMatrix();
-            showPoint();
-            setUpRotationMatrix(0.0, 0.0, 1.0, 0.0);
-            multiplyMatrix();
-            showPoint();
-            setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
-            multiplyMatrix();
-            showPoint();
-            */
-            aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
-            aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
-            if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
-                printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-            else if(0)
-                printf("%ld ,%ld\n", aluanX, aluanY);
-            nanosleep(&req, (struct timespec *)NULL);
+                /*
+                setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
+                multiplyMatrix();
+                showPoint();
+                setUpRotationMatrix(0.0, 0.0, 1.0, 0.0);
+                multiplyMatrix();
+                showPoint();
+                setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
+                multiplyMatrix();
+                showPoint();
+                */
+                aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
+                aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
+                if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
+                    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                else if(0)
+                    printf("%ld ,%ld\n", aluanX, aluanY);
+                nanosleep(&req, (struct timespec *)NULL);
+                ghost = 0;
+            }
         }
 
         free(XY);
