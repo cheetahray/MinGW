@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     int n;
     int dim = 2;
     int *XY;
-    //int ghost = 0;
+    int ghost = 0;
     /*
     int k, kk;
     double cluster_centroid[32];
