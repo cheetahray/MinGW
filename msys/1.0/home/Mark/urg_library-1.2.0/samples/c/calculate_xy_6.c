@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     int n;
     int dim = 2;
     int *XY;
-    int ghost = 0;
+    //int ghost = 0;
     /*
     int k, kk;
     double cluster_centroid[32];
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     */
     lo_address t = lo_address_new("192.168.0.252", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 10; // length of time to sleep, in miliseconds
+    int milisec = 100; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 
         if(counter > 0)
         {
-            if(ghost++ > 2)
+            if(ghost++ >= 0)
             {
                 if(counter >= 2)
                 {
