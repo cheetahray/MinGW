@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             why[aluanX/56][aluanY/56]++;
 			
-            if(ghost++ >= 30)
+            if(ghost++ >= 3)
             {
                 int lastone = -1;
                 int iii, jjj;
@@ -190,7 +190,9 @@ int main(int argc, char *argv[])
                             iii = ii;
                             jjj = jj;
                         }
-                if ( lo_send(t, "/radar", "iii", 6, iii * 56 + 28, jjj * 56 + 28 ) == -1 )
+                aluanX = iii * 56 + 28;
+				aluanY = jjj * 56 + 28;
+                if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(1)
                     printf("%ld ,%ld\n", aluanX, aluanY);
