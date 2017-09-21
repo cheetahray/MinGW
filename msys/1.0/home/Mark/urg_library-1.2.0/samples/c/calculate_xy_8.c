@@ -20,10 +20,10 @@
 #include "kmeans.h"
 #include "rotate.h"
 //#define littlestar
-#define Xmin 300.0
-#define Xmax 1458.0
+#define Xmin 285.0
+#define Xmax 1452.0
 #define Ymin 2300.0
-#define Ymax 3400.0
+#define Ymax 3385.0
 /*
 void* say_hello(void* data)
 {
@@ -166,8 +166,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            /*
             showPoint();
+            /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
                 if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
 #endif
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                    else if(1)
+                    else if(0)
                         printf("%ld ,%ld\n", aluanX, aluanY);
                     //nanosleep(&req, (struct timespec *)NULL);
                 }
