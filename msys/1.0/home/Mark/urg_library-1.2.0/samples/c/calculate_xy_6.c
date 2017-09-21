@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     long time_stamp;
     int i;
     int n;
-    int dim = 2;
+    //int dim = 2;
     int XY[1024];
     int ghost = 0;
     int why[8][8];
@@ -88,8 +88,8 @@ int main(int argc, char *argv[])
     int counter = 0;
     int aluanX = 0;
     int aluanY = 0;
-	int lastAluanX = 0;
-	int lastAluanY = 0;
+    int lastAluanX = 0;
+    int lastAluanY = 0;
     /*
     pthread_t t1;
 
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
                 if(0 == keypress)
-				    keypress = 1;
+                    keypress = 1;
             }
         }
 
@@ -183,9 +183,9 @@ int main(int argc, char *argv[])
             why[3][aluanX/56]++;//[aluanX/56][aluanY/56]++;
             //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             //printf("%ld\n", ghost);
-			if(ghost++ > 7)
+            if(ghost++ > 7)
             {
-				int lastone = -1;
+                int lastone = -1;
                 int iii, jjj;
                 for(int ii = 0; ii < 8; ii++)
                     for(int jj = 0; jj < 8; jj++)
@@ -197,28 +197,28 @@ int main(int argc, char *argv[])
                         }
                 aluanY = iii * 56 + 28;
                 aluanX = jjj * 56 + 28;
-				if (aluanX != lastAluanX)// && aluanY != lastAluanY)
-				{
-				printf("%ld, %ld\n", aluanX, lastAluanX);
-					lastAluanX = aluanX;
-					lastAluanY = aluanY;
-					keypress = 1;
-				}
+                if (aluanX != lastAluanX)// && aluanY != lastAluanY)
+                {
+                    printf("%ld, %ld\n", aluanX, lastAluanX);
+                    lastAluanX = aluanX;
+                    lastAluanY = aluanY;
+                    keypress = 1;
+                }
                 if( 1 == keypress )
                 {
-                    keypress = 2;					
-					if ( lo_send(t, "/radar", "iii", 6, aluanX, 196 ) == -1 )
-						printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-					else if(1)
-						printf("%ld ,%ld\n", aluanX, aluanY);
-					//nanosleep(&req, (struct timespec *)NULL);
-			    }
-					ghost = 0;
-					for(int ii = 0; ii < 8; ii++)
-						for(int jj = 0; jj < 8; jj++)
-							why[ii][jj] = 0;
-			}
-			
+                    keypress = 2;
+                    if ( lo_send(t, "/radar", "iii", 6, aluanX, 196 ) == -1 )
+                        printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                    else if(1)
+                        printf("%ld ,%ld\n", aluanX, aluanY);
+                    //nanosleep(&req, (struct timespec *)NULL);
+                }
+                ghost = 0;
+                for(int ii = 0; ii < 8; ii++)
+                    for(int jj = 0; jj < 8; jj++)
+                        why[ii][jj] = 0;
+            }
+
         }
         else
         {
@@ -226,8 +226,8 @@ int main(int argc, char *argv[])
             {
                 ghost = 0;
                 keypress = 0;
-				//printf("%ld\n", ghost);
-				for(int ii = 0; ii < 8; ii++)
+                //printf("%ld\n", ghost);
+                for(int ii = 0; ii < 8; ii++)
                     for(int jj = 0; jj < 8; jj++)
                         why[ii][jj] = 0;
             }
