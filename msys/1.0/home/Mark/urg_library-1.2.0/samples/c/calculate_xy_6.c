@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             why[aluanX/56][aluanY/56]++;
-			printf("%ld ,%ld\n", aluanX/56, aluanY/56);
-            if(ghost++ > 2)
+			//printf("%ld ,%ld\n", aluanX/56, aluanY/56);
+            if(1)//(ghost++ > 2)
             {
                 int lastone = -1;
                 int iii, jjj;
