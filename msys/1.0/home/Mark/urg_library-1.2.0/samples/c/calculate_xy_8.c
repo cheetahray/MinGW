@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
                 aluanX = jjj * 56 + 28;
                 if (aluanX != lastAluanX
 #ifndef littlestar
-                        && aluanY != lastAluanY
+                        || aluanY != lastAluanY
 #endif
                     )
                 {
