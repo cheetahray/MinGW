@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-
+#define littlestar
 #define Xmin 300.0
 #define Xmax 1458.0
 #define Ymin 2300.0
@@ -45,8 +45,10 @@ int main(int argc, char *argv[])
     long time_stamp;
     int i;
     int n;
-    int dim = 2;
-    int *XY;
+    //int dim = 2;
+    int XY[1024];
+    int ghost = 0;
+    int why[8][8];
     /*
     int k, kk;
     double cluster_centroid[32];
@@ -86,6 +88,8 @@ int main(int argc, char *argv[])
     int counter = 0;
     int aluanX = 0;
     int aluanY = 0;
+    int lastAluanX = 0;
+    int lastAluanY = 0;
     /*
     pthread_t t1;
 
@@ -99,6 +103,10 @@ int main(int argc, char *argv[])
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
 
+    for(int ii = 0; ii < 8; ii++)
+        for(int jj = 0; jj < 8; jj++)
+            why[ii][jj] = 0;
+    int keypress = 0;
     while(1)
     {
         // Gets measurement data
@@ -112,7 +120,7 @@ int main(int argc, char *argv[])
         else
         {
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
-            XY = (int *)malloc( (sizeof(int) * n) << 1 );
+            //XY = (int *)malloc( (sizeof(int) * n) << 1 );
             counter = 0;
         }
 
@@ -136,6 +144,8 @@ int main(int argc, char *argv[])
             {
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
+                if(0 == keypress)
+                    keypress = 1;
             }
         }
 
@@ -156,9 +166,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            showPoint();
-
             /*
+            showPoint();
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -171,14 +180,72 @@ int main(int argc, char *argv[])
             */
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
-            if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
-                printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-            else if(0)
-                printf("%ld ,%ld\n", aluanX, aluanY);
-            nanosleep(&req, (struct timespec *)NULL);
+#ifdef littlestar
+            why[3][aluanX/56]++;
+#else
+            why[aluanX/56][aluanY/56]++;
+#endif
+            //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
+            //printf("%ld\n", ghost);
+            if(ghost++ > 7)
+            {
+                int lastone = -1;
+                int iii, jjj;
+                for(int ii = 0; ii < 8; ii++)
+                    for(int jj = 0; jj < 8; jj++)
+                        if( why[ii][jj] > lastone )
+                        {
+                            lastone = why[ii][jj];
+                            iii = ii;
+                            jjj = jj;
+                        }
+                aluanY = iii * 56 + 28;
+                aluanX = jjj * 56 + 28;
+                if (aluanX != lastAluanX
+#ifndef littlestar
+                        && aluanY != lastAluanY)
+#endif
+                    )
+                {
+                    printf("%ld, %ld\n", aluanX, lastAluanX);
+                    lastAluanX = aluanX;
+                    lastAluanY = aluanY;
+                    keypress = 1;
+                }
+                if( 1 == keypress )
+            {
+                keypress = 2;
+#ifdef littlestar
+                if ( lo_send(t, "/radar", "iii", 8, aluanX, 196 ) == -1 )
+#else
+                if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
+#endif
+                        printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                    else if(1)
+                        printf("%ld ,%ld\n", aluanX, aluanY);
+                    //nanosleep(&req, (struct timespec *)NULL);
+                }
+                ghost = 0;
+                for(int ii = 0; ii < 8; ii++)
+            for(int jj = 0; jj < 8; jj++)
+            why[ii][jj] = 0;
         }
 
-        free(XY);
+    }
+    else
+    {
+        if(keypress > 0)
+            {
+                ghost = 0;
+                keypress = 0;
+                //printf("%ld\n", ghost);
+                for(int ii = 0; ii < 8; ii++)
+                    for(int jj = 0; jj < 8; jj++)
+                        why[ii][jj] = 0;
+            }
+
+        }
+        //free(XY);
     }
     // Disconnects
     free(data);
