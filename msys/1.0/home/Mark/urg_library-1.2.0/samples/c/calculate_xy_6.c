@@ -88,6 +88,8 @@ int main(int argc, char *argv[])
     int counter = 0;
     int aluanX = 0;
     int aluanY = 0;
+	int lastAluanX = 0;
+	int lastAluanY = 0;
     /*
     pthread_t t1;
 
@@ -100,11 +102,11 @@ int main(int argc, char *argv[])
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
-    
+
     for(int ii = 0; ii < 8; ii++)
         for(int jj = 0; jj < 8; jj++)
             why[ii][jj] = 0;
-            
+    int keypress = 0;
     while(1)
     {
         // Gets measurement data
@@ -142,6 +144,7 @@ int main(int argc, char *argv[])
             {
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
+                keypress = 1;
             }
         }
 
@@ -177,8 +180,8 @@ int main(int argc, char *argv[])
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             why[aluanX/56][aluanY/56]++;
-			//printf("%ld ,%ld\n", aluanX/56, aluanY/56);
-            if(1)//(ghost++ > 2)
+            //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
+            if(ghost++ > 2)
             {
                 int lastone = -1;
                 int iii, jjj;
@@ -203,7 +206,15 @@ int main(int argc, char *argv[])
                         why[ii][jj] = 0;
             }
         }
+        else
+        {
+            if(1 == keypress)
+            {
+                ghost = 0;
+                keypress = 0;
+            }
 
+        }
         //free(XY);
     }
     // Disconnects
