@@ -20,9 +20,9 @@
 #include "kmeans.h"
 #include "rotate.h"
 
-#define Xmin 265.0
-#define Xmax 1330.0
-#define Ymin 2350.0
+#define Xmin 270.0
+#define Xmax 1360.0
+#define Ymin 2360.0
 #define Ymax 3485.0
 /*
 void* say_hello(void* data)
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     int first_step = urg_rad2step(&urg, -22);
     int last_step = urg_rad2step(&urg, +22);
     */
-    int first_step = urg_deg2step(&urg, -37.0); //urg_rad2step(&urg, 0);
+    int first_step = urg_deg2step(&urg, -38.0); //urg_rad2step(&urg, 0);
     int last_step = urg_deg2step(&urg, 0.0); //urg_rad2step(&urg, 0.65);
     int skip_step = 0;
     int ret = urg_set_scanning_parameter(&urg, first_step, last_step, skip_step);
