@@ -22,8 +22,8 @@
 
 #define Xmin 265.0
 #define Xmax 1330.0
-#define Ymin 2240.0
-#define Ymax 3460.0
+#define Ymin 2350.0
+#define Ymax 3485.0
 /*
 void* say_hello(void* data)
 {
@@ -146,8 +146,8 @@ int main(int argc, char *argv[])
                     aluanX = (int)( (x + Xmax) / unitX );
                     aluanY = (int)( (Ymin + y) / -unitY );
                     why[aluanX/56][aluanY/56]++;
-                    counter++;
                 }
+                counter++;
                 //XY[counter++] = (int)x;
                 //XY[counter++] = (int)y;
             }
@@ -200,11 +200,11 @@ int main(int argc, char *argv[])
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             */
             
-            if(1) //(ghost++ > threshold)
+            if(ghost++ > threshold)
             {
                 if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                else if(0)
+                else if(1)
                     printf("%ld ,%ld\n", aluanX, aluanY);
                 //nanosleep(&req, (struct timespec *)NULL);
                 ghost = 0;
