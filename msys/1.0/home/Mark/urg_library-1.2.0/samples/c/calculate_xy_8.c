@@ -144,7 +144,9 @@ int main(int argc, char *argv[])
             {
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
+#ifdef littlestar
                 if(0 == keypress)
+#endif
                     keypress = 1;
             }
         }
