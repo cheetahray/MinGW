@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
 #ifdef littlestar
             why[3][aluanX/56]++;
 #else
-            why[aluanX/56][aluanY/56]++;
+            why[aluanY/56][aluanX/56]++;
 #endif
             //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             //printf("%ld\n", ghost);
