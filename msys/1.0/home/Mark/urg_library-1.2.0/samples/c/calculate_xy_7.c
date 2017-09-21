@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-#define littlestar
+//#define littlestar
 #define Xmin 234.0
 #define Xmax 1455.0
 #define Ymin 2166.0
@@ -204,22 +204,22 @@ int main(int argc, char *argv[])
                 aluanX = jjj * 56 + 28;
                 if (aluanX != lastAluanX
 #ifndef littlestar
-                        && aluanY != lastAluanY)
+                        && aluanY != lastAluanY
 #endif
-                    )
+                   )
                 {
-                    printf("%ld, %ld\n", aluanX, lastAluanX);
+                    //printf("%ld, %ld\n", aluanX, lastAluanX);
                     lastAluanX = aluanX;
                     lastAluanY = aluanY;
                     keypress = 1;
                 }
                 if( 1 == keypress )
-            {
-                keypress = 2;
+                {
+                    keypress = 2;
 #ifdef littlestar
-                if ( lo_send(t, "/radar", "iii", 7, aluanX, 196 ) == -1 )
+                    if ( lo_send(t, "/radar", "iii", 7, aluanX, 196 ) == -1 )
 #else
-                if ( lo_send(t, "/radar", "iii", 7, aluanX, aluanY ) == -1 )
+                    if ( lo_send(t, "/radar", "iii", 7, aluanX, aluanY ) == -1 )
 #endif
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     else if(1)
@@ -228,14 +228,14 @@ int main(int argc, char *argv[])
                 }
                 ghost = 0;
                 for(int ii = 0; ii < 8; ii++)
-            for(int jj = 0; jj < 8; jj++)
-            why[ii][jj] = 0;
-        }
+                    for(int jj = 0; jj < 8; jj++)
+                        why[ii][jj] = 0;
+            }
 
-    }
-    else
-    {
-        if(keypress > 0)
+        }
+        else
+        {
+            if(keypress > 0)
             {
                 ghost = 0;
                 keypress = 0;

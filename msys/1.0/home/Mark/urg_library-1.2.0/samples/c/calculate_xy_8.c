@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-#define littlestar
+//#define littlestar
 #define Xmin 300.0
 #define Xmax 1458.0
 #define Ymin 2300.0
@@ -203,11 +203,11 @@ int main(int argc, char *argv[])
                 aluanX = jjj * 56 + 28;
                 if (aluanX != lastAluanX
 #ifndef littlestar
-                        && aluanY != lastAluanY)
+                        && aluanY != lastAluanY
 #endif
                     )
                 {
-                    printf("%ld, %ld\n", aluanX, lastAluanX);
+                    //printf("%ld, %ld\n", aluanX, lastAluanX);
                     lastAluanX = aluanX;
                     lastAluanY = aluanY;
                     keypress = 1;

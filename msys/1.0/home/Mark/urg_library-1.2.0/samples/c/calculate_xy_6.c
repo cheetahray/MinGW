@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-#define littlestar
+//#define littlestar
 #define Xmin 270.0
 #define Xmax 1360.0
 #define Ymin 2360.0
@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 #endif
                    )
                 {
-                    printf("%ld, %ld\n", aluanX, lastAluanX);
+                    //printf("%ld, %ld\n", aluanX, lastAluanX);
                     lastAluanX = aluanX;
                     lastAluanY = aluanY;
                     keypress = 1;
