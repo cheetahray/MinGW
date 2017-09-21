@@ -185,8 +185,7 @@ int main(int argc, char *argv[])
             //printf("%ld\n", ghost);
 			if(ghost++ > 4)
             {
-				keypress = 2;
-                int lastone = -1;
+				int lastone = -1;
                 int iii, jjj;
                 for(int ii = 0; ii < 8; ii++)
                     for(int jj = 0; jj < 8; jj++)
@@ -198,6 +197,7 @@ int main(int argc, char *argv[])
                         }
                 aluanY = iii * 56 + 28;
                 aluanX = jjj * 56 + 28;
+				printf("%ld, %ld\n", aluanX, lastAluanX);
 				if (aluanX != lastAluanX)// && aluanY != lastAluanY)
 				{
 					lastAluanX = aluanX;
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
             {
                 ghost = 0;
                 keypress = 0;
-				printf("%ld\n", ghost);
+				//printf("%ld\n", ghost);
 				for(int ii = 0; ii < 8; ii++)
                     for(int jj = 0; jj < 8; jj++)
                         why[ii][jj] = 0;
