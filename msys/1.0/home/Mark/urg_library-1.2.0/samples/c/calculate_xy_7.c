@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-
+#define littlestar
 #define Xmin 234.0
 #define Xmax 1455.0
 #define Ymin 2166.0
@@ -45,8 +45,10 @@ int main(int argc, char *argv[])
     long time_stamp;
     int i;
     int n;
-    int dim = 2;
-    int *X, *Y;
+    //int dim = 2;
+    int XY[1024];
+    int ghost = 0;
+    int why[8][8];
     /*
     int k, kk;
     double cluster_centroid[32];
@@ -84,6 +86,10 @@ int main(int argc, char *argv[])
     int scan_times = 1;
     int skip_scan = 0;
     int counter = 0;
+    int aluanX = 0;
+    int aluanY = 0;
+    int lastAluanX = 0;
+    int lastAluanY = 0;
     /*
     pthread_t t1;
 
@@ -97,6 +103,10 @@ int main(int argc, char *argv[])
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
 
+    for(int ii = 0; ii < 8; ii++)
+        for(int jj = 0; jj < 8; jj++)
+            why[ii][jj] = 0;
+    int keypress = 0;
     while(1)
     {
         // Gets measurement data
@@ -110,8 +120,8 @@ int main(int argc, char *argv[])
         else
         {
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
-            X = (int *)malloc(sizeof(int) * n );
-            Y = (int *)malloc(sizeof(int) * n );
+            //X = (int *)malloc(sizeof(int) * n );
+            //Y = (int *)malloc(sizeof(int) * n );
             counter = 0;
         }
 
@@ -133,28 +143,32 @@ int main(int argc, char *argv[])
             x = distance * sin(radian);
             if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
-                X[counter] = (int)x;
-                Y[counter] = (int)y;
-                counter++;
+                XY[counter++] = (int)x;
+                XY[counter++] = (int)y;
+                if(0 == keypress)
+                    keypress = 1;
             }
         }
 
         if(counter > 0)
         {
-            qsort (X, counter, sizeof(int), compareXA);
-            qsort (Y, counter, sizeof(int), compareXD);
-
-            inputMatrix[0][0] = (double)X[0];
-            inputMatrix[1][0] = (double)Y[0];
+            if(counter >= 2)
+            {
+                qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
+                aluanX = XY[0];
+                qsort (XY, counter >> 1, sizeof(int) << 1, compareXA);
+                aluanY = XY[1];
+            }
+            inputMatrix[0][0] = (double)aluanX;
+            inputMatrix[1][0] = (double)aluanY;
             inputMatrix[2][0] = 0.0;
             inputMatrix[3][0] = 1.0;
-            outputMatrix[0][0] = (double)X[0];
-            outputMatrix[1][0] = (double)Y[0];
+            outputMatrix[0][0] = (double)aluanX;
+            outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            showPoint();
-
             /*
+            showPoint();
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -165,13 +179,74 @@ int main(int argc, char *argv[])
             multiplyMatrix();
             showPoint();
             */
-
-            if ( lo_send(t, "/radar", "iii", 7, (int)( (outputMatrix[0][0]-Xmin) / unitX + 14.0 ), (int)( (Ymin+outputMatrix[1][0]) / -unitY + 28.0 ) ) == -1 )
-                printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-            nanosleep(&req, (struct timespec *)NULL);
+            aluanX = (int)( (outputMatrix[0][0] - Xmin) / unitX );
+            aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
+#ifdef littlestar
+            why[3][aluanX/56]++;
+#else
+            why[aluanX/56][aluanY/56]++;
+#endif
+            //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
+            //printf("%ld\n", ghost);
+            if(ghost++ > 7)
+            {
+                int lastone = -1;
+                int iii, jjj;
+                for(int ii = 0; ii < 8; ii++)
+                    for(int jj = 0; jj < 8; jj++)
+                        if( why[ii][jj] > lastone )
+                        {
+                            lastone = why[ii][jj];
+                            iii = ii;
+                            jjj = jj;
+                        }
+                aluanY = iii * 56 + 28;
+                aluanX = jjj * 56 + 28;
+                if (aluanX != lastAluanX
+#ifndef littlestar
+                        && aluanY != lastAluanY)
+#endif
+                    )
+                {
+                    printf("%ld, %ld\n", aluanX, lastAluanX);
+                    lastAluanX = aluanX;
+                    lastAluanY = aluanY;
+                    keypress = 1;
+                }
+                if( 1 == keypress )
+            {
+                keypress = 2;
+#ifdef littlestar
+                if ( lo_send(t, "/radar", "iii", 7, aluanX, 196 ) == -1 )
+#else
+                if ( lo_send(t, "/radar", "iii", 7, aluanX, aluanY ) == -1 )
+#endif
+                        printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                    else if(1)
+                        printf("%ld ,%ld\n", aluanX, aluanY);
+                    //nanosleep(&req, (struct timespec *)NULL);
+                }
+                ghost = 0;
+                for(int ii = 0; ii < 8; ii++)
+            for(int jj = 0; jj < 8; jj++)
+            why[ii][jj] = 0;
         }
-        free(Y);
-        free(X);
+
+    }
+    else
+    {
+        if(keypress > 0)
+            {
+                ghost = 0;
+                keypress = 0;
+                //printf("%ld\n", ghost);
+                for(int ii = 0; ii < 8; ii++)
+                    for(int jj = 0; jj < 8; jj++)
+                        why[ii][jj] = 0;
+            }
+
+        }
+        //free(XY);
     }
     // Disconnects
     free(data);
