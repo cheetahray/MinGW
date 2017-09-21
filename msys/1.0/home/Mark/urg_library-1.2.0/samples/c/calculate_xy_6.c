@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
             why[3][aluanX/56]++;//[aluanX/56][aluanY/56]++;
             //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             //printf("%ld\n", ghost);
-			if(ghost++ > 4)
+			if(ghost++ > 7)
             {
 				int lastone = -1;
                 int iii, jjj;
@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
                         }
                 aluanY = iii * 56 + 28;
                 aluanX = jjj * 56 + 28;
-				printf("%ld, %ld\n", aluanX, lastAluanX);
 				if (aluanX != lastAluanX)// && aluanY != lastAluanY)
 				{
+				printf("%ld, %ld\n", aluanX, lastAluanX);
 					lastAluanX = aluanX;
 					lastAluanY = aluanY;
 					keypress = 1;
@@ -212,12 +212,12 @@ int main(int argc, char *argv[])
 					else if(1)
 						printf("%ld ,%ld\n", aluanX, aluanY);
 					//nanosleep(&req, (struct timespec *)NULL);
+			    }
 					ghost = 0;
 					for(int ii = 0; ii < 8; ii++)
 						for(int jj = 0; jj < 8; jj++)
 							why[ii][jj] = 0;
-			    }
-            }
+			}
 			
         }
         else
