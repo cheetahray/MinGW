@@ -181,7 +181,8 @@ int main(int argc, char *argv[])
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             why[aluanX/56][aluanY/56]++;
             //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
-            if(ghost++ > 2)
+            printf("%ld\n", ghost);
+			if(ghost++ > 2)
             {
                 int lastone = -1;
                 int iii, jjj;
@@ -205,6 +206,7 @@ int main(int argc, char *argv[])
                     for(int jj = 0; jj < 8; jj++)
                         why[ii][jj] = 0;
             }
+			
         }
         else
         {
@@ -212,6 +214,7 @@ int main(int argc, char *argv[])
             {
                 ghost = 0;
                 keypress = 0;
+				printf("%ld\n", ghost);
             }
 
         }
