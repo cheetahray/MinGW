@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     int i;
     int n;
     int dim = 2;
-    int *XY;
+    int XY[1024];
     int ghost = 0;
     int why[8][8];
     /*
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
         else
         {
             //cluster_assignment_final = (int *)malloc(sizeof(int) * n);
-            XY = (int *)malloc( (sizeof(int) * n) << 1 );
+            //XY = (int *)malloc( (sizeof(int) * n) << 1 );
             counter = 0;
         }
 
@@ -162,8 +162,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            /*
             showPoint();
+            /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
                 aluanY = jjj * 56 + 28;
                 if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                else if(1)
+                else if(0)
                     printf("%ld ,%ld\n", aluanX, aluanY);
                 //nanosleep(&req, (struct timespec *)NULL);
                 ghost = 0;
@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        free(XY);
+        //free(XY);
     }
     // Disconnects
     free(data);
