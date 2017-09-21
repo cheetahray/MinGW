@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-
+#define littlestar
 #define Xmin 270.0
 #define Xmax 1360.0
 #define Ymin 2360.0
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     */
     lo_address t = lo_address_new("192.168.0.252", "12002");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 100; // length of time to sleep, in miliseconds
+    int milisec = 33; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
@@ -180,7 +180,11 @@ int main(int argc, char *argv[])
             */
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
-            why[3][aluanX/56]++;//[aluanX/56][aluanY/56]++;
+#ifdef littlestar
+            why[3][aluanX/56]++;
+#else
+            why[aluanX/56][aluanY/56]++;
+#endif
             //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             //printf("%ld\n", ghost);
             if(ghost++ > 7)
@@ -197,7 +201,11 @@ int main(int argc, char *argv[])
                         }
                 aluanY = iii * 56 + 28;
                 aluanX = jjj * 56 + 28;
-                if (aluanX != lastAluanX)// && aluanY != lastAluanY)
+                if (aluanX != lastAluanX
+#ifndef littlestar
+                        && aluanY != lastAluanY
+#endif
+                   )
                 {
                     printf("%ld, %ld\n", aluanX, lastAluanX);
                     lastAluanX = aluanX;
@@ -207,7 +215,11 @@ int main(int argc, char *argv[])
                 if( 1 == keypress )
                 {
                     keypress = 2;
+#ifdef littlestar
                     if ( lo_send(t, "/radar", "iii", 6, aluanX, 196 ) == -1 )
+#else
+                    if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
+#endif
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     else if(1)
                         printf("%ld ,%ld\n", aluanX, aluanY);
