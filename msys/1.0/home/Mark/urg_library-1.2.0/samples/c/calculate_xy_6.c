@@ -144,7 +144,8 @@ int main(int argc, char *argv[])
             {
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
-                keypress = 1;
+                if(0 == keypress)
+				    keypress = 1;
             }
         }
 
@@ -182,8 +183,9 @@ int main(int argc, char *argv[])
             why[3][aluanX/56]++;//[aluanX/56][aluanY/56]++;
             //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             //printf("%ld\n", ghost);
-			if(ghost++ > 4)
+			if(ghost++ > 4 && 1 == keypress)
             {
+				keypress = 2;
                 int lastone = -1;
                 int iii, jjj;
                 for(int ii = 0; ii < 8; ii++)
@@ -210,7 +212,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            if(1 == keypress)
+            if(keypress > 0)
             {
                 ghost = 0;
                 keypress = 0;
