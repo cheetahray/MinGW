@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
                         }
                 aluanX = iii * 56 + 28;
                 aluanY = jjj * 56 + 28;
-                if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
+                if ( lo_send(t, "/radar", "iii", 6, aluanX, 196 ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(0)
                     printf("%ld ,%ld\n", aluanX, aluanY);
