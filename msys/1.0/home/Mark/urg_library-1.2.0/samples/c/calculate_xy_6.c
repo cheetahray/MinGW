@@ -46,9 +46,8 @@ int main(int argc, char *argv[])
     int i;
     int n;
     int dim = 2;
-    //int XY[1024];
+    int XY[1024];
     int ghost = 0;
-    int threshold = 2;
     int why[8][8];
     /*
     int k, kk;
@@ -76,7 +75,7 @@ int main(int argc, char *argv[])
     int first_step = urg_rad2step(&urg, -22);
     int last_step = urg_rad2step(&urg, +22);
     */
-    int first_step = urg_deg2step(&urg, -38.0); //urg_rad2step(&urg, 0);
+    int first_step = urg_deg2step(&urg, -37.0); //urg_rad2step(&urg, 0);
     int last_step = urg_deg2step(&urg, 0.0); //urg_rad2step(&urg, 0.65);
     int skip_step = 0;
     int ret = urg_set_scanning_parameter(&urg, first_step, last_step, skip_step);
@@ -141,21 +140,13 @@ int main(int argc, char *argv[])
             x = distance * sin(radian);
             if( fabs(x) > Xmin && fabs(y) > Ymin && fabs(x) < Xmax && fabs(y) < Ymax )
             {
-                if(ghost > threshold) 
-                {
-                    aluanX = (int)( (x + Xmax) / unitX );
-                    aluanY = (int)( (Ymin + y) / -unitY );
-                    why[aluanX/56][aluanY/56]++;
-                }
-                counter++;
-                //XY[counter++] = (int)x;
-                //XY[counter++] = (int)y;
+                XY[counter++] = (int)x;
+                XY[counter++] = (int)y;
             }
         }
 
         if(counter > 0)
         {
-            /*
             if(counter >= 2)
             {
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
@@ -163,21 +154,6 @@ int main(int argc, char *argv[])
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
                 aluanY = XY[1];
             }
-            */
-            int lastone = -1;
-            int iii, jjj;
-            for(int ii = 0; ii < 8; ii++)
-                for(int jj = 0; jj < 8; jj++)
-                    if( why[ii][jj] > lastone )
-                    {
-                        lastone = why[ii][jj];
-                        iii = ii;
-                        jjj = jj;
-                    }
-            aluanX = iii * 56 + 28;
-            aluanY = jjj * 56 + 28;
-
-            /*
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;
             inputMatrix[2][0] = 0.0;
@@ -187,6 +163,7 @@ int main(int argc, char *argv[])
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
             showPoint();
+            /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -196,15 +173,28 @@ int main(int argc, char *argv[])
             setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
             multiplyMatrix();
             showPoint();
+            */
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
-            */
-            
-            if(ghost++ > threshold)
+            why[aluanX/56][aluanY/56]++;
+			
+            if(ghost++ > 2)
             {
+                int lastone = -1;
+                int iii, jjj;
+                for(int ii = 0; ii < 8; ii++)
+                    for(int jj = 0; jj < 8; jj++)
+                        if( why[ii][jj] > lastone )
+                        {
+                            lastone = why[ii][jj];
+                            iii = ii;
+                            jjj = jj;
+                        }
+                aluanX = iii * 56 + 28;
+                aluanY = jjj * 56 + 28;
                 if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                else if(1)
+                else if(0)
                     printf("%ld ,%ld\n", aluanX, aluanY);
                 //nanosleep(&req, (struct timespec *)NULL);
                 ghost = 0;
