@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
             */
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
-            why[aluanX/56][aluanY/56]++;
+            why[aluanX/56][3];//[aluanY/56]++;
             //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             printf("%ld\n", ghost);
 			if(ghost++ > 2)
