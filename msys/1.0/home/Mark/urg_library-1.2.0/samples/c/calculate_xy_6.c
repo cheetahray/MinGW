@@ -22,8 +22,8 @@
 
 #define Xmin 265.0
 #define Xmax 1330.0
-#define Ymin 2208.0
-#define Ymax 3448.0
+#define Ymin 2240.0
+#define Ymax 3460.0
 /*
 void* say_hello(void* data)
 {
