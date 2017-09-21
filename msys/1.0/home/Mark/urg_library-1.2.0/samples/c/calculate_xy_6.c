@@ -162,8 +162,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            showPoint();
             /*
+            showPoint();
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
                 aluanY = jjj * 56 + 28;
                 if ( lo_send(t, "/radar", "iii", 6, aluanX, 196 ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                else if(0)
+                else if(1)
                     printf("%ld ,%ld\n", aluanX, aluanY);
                 //nanosleep(&req, (struct timespec *)NULL);
                 ghost = 0;
