@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-//#define littlestar
+#define littlestar
 #define Xmin 234.0
 #define Xmax 1455.0
 #define Ymin 2166.0

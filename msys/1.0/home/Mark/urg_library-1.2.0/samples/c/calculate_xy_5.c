@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-//#define littlestar
+#define littlestar
 #define Xmin 235.0
 #define Xmax 1390.0
 #define Ymin 2190.0
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
                 {
                     keypress = 2;
 #ifdef littlestar
-                    if ( lo_send(t, "/radar", "iii", 5 aluanX, 196 ) == -1 )
+                    if ( lo_send(t, "/radar", "iii", 5, aluanX, 196 ) == -1 )
 #else
                     if ( lo_send(t, "/radar", "iii", 5, aluanX, aluanY ) == -1 )
 #endif
