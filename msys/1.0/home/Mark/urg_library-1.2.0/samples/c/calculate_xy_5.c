@@ -238,6 +238,12 @@ int main(int argc, char *argv[])
         {
             if(keypress > 0)
             {
+#ifdef littlestar
+                if ( lo_send(t, "/radar", "iii", 5, 0, 0 ) == -1 )
+                    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                else if(1)
+                    printf("%ld ,%ld\n", 0, 0);
+#endif
                 ghost = 0;
                 keypress = 0;
                 //printf("%ld\n", ghost);

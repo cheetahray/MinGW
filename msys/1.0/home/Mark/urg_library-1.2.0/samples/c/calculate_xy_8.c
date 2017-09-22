@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 #ifndef littlestar
                         || aluanY != lastAluanY
 #endif
-                    )
+                   )
                 {
                     //printf("%ld, %ld\n", aluanX, lastAluanX);
                     lastAluanX = aluanX;
@@ -215,12 +215,12 @@ int main(int argc, char *argv[])
                     keypress = 1;
                 }
                 if( 1 == keypress )
-            {
-                keypress = 2;
+                {
+                    keypress = 2;
 #ifdef littlestar
-                if ( lo_send(t, "/radar", "iii", 8, aluanX, 196 ) == -1 )
+                    if ( lo_send(t, "/radar", "iii", 8, aluanX, 196 ) == -1 )
 #else
-                if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
+                    if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
 #endif
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     else if(0)
@@ -229,15 +229,21 @@ int main(int argc, char *argv[])
                 }
                 ghost = 0;
                 for(int ii = 0; ii < 8; ii++)
-            for(int jj = 0; jj < 8; jj++)
-            why[ii][jj] = 0;
-        }
+                    for(int jj = 0; jj < 8; jj++)
+                        why[ii][jj] = 0;
+            }
 
-    }
-    else
-    {
-        if(keypress > 0)
+        }
+        else
+        {
+            if(keypress > 0)
             {
+#ifdef littlestar
+                if ( lo_send(t, "/radar", "iii", 8, 0, 0 ) == -1 )
+                    printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+                else if(1)
+                    printf("%ld ,%ld\n", 0, 0);
+#endif
                 ghost = 0;
                 keypress = 0;
                 //printf("%ld\n", ghost);
