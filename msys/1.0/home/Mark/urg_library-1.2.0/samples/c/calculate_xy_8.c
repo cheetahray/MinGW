@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
             Y3 = (BottomRightY-fabs(outputMatrix[1][0]));
             Y4 = (fabs(outputMatrix[1][0])-BottomLeftY);
             Xmax = (Y3 * BottomRightX + Y4 * BottomLeftX) / (Y4 + Y3);
-            printf("%lf ,%lf. %lf, %lf\n", Xmin, Xmax, Ymin, Ymax);
+            printf("%lf ,%lf, %lf, %lf\n", Xmin, Xmax, Ymin, Ymax);
 #endif
             unitX = (Xmax - Xmin) / 448.0;
             unitY = (Ymax - Ymin) / 448.0;
