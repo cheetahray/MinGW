@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-#define littlestar
+//#define littlestar
 #ifdef littlestar
 #define TopRightX 285.0
 #define TopLeftX 285.0
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
             Y3 = (BottomRightY-fabs(outputMatrix[1][0]));
             Y4 = (fabs(outputMatrix[1][0])-BottomLeftY);
             Xmax = (Y3 * BottomRightX + Y4 * BottomLeftX) / (Y4 + Y3);
-            printf("%lf ,%lf\n", Xmin, Xmax, Ymin, Ymax);
+            printf("%lf ,%lf. %lf, %lf\n", Xmin, Xmax, Ymin, Ymax);
 #endif
             unitX = (Xmax - Xmin) / 448.0;
             unitY = (Ymax - Ymin) / 448.0;
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
                     if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
 #endif
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                    else if(0)
+                    else if(1)
                         printf("%ld ,%ld\n", aluanX, aluanY);
                     //nanosleep(&req, (struct timespec *)NULL);
                 }
