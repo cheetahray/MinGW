@@ -20,10 +20,25 @@
 #include "kmeans.h"
 #include "rotate.h"
 #define littlestar
-#define Xmin 285.0
-#define Xmax 1452.0
-#define Ymin 2300.0
-#define Ymax 3385.0
+#ifdef littlestar
+#define TopRightX 285.0
+#define TopLeftX 285.0
+#define BottomRightX 1452.0
+#define BottomLeftX 1452.0
+#define TopRightY 2300.0
+#define TopLeftY 2300.0
+#define BottomRightY 3385.0
+#define BottomLeftY 3385.0
+#else
+#define TopRightX 285.0
+#define TopLeftX 285.0
+#define BottomRightX 1452.0
+#define BottomLeftX 1452.0
+#define TopRightY 2300.0
+#define TopLeftY 2300.0
+#define BottomRightY 3385.0
+#define BottomLeftY 3385.0
+#endif
 /*
 void* say_hello(void* data)
 {
@@ -49,16 +64,15 @@ int main(int argc, char *argv[])
     int XY[1024];
     int ghost = 0;
     int why[8][8];
-    /*
-    int k, kk;
-    double cluster_centroid[32];
-    int   *cluster_assignment_final;
-    double last[2];
-    */
+
+    double Xmin, Xmax, Ymin, Ymax;
+    double X1, X2, X3, X4;
+    double Y1, Y2, Y3, Y4;
+    double radian, x, y;
+
     double unitX = 0.0;
     double unitY = 0.0;
-    unitX = (Xmax - Xmin) / 448.0;
-    unitY = (Ymax - Ymin) / 448.0;
+
     if (open_urg_sensor(&urg, argc, argv) < 0) {
         return 1;
     }
@@ -107,6 +121,12 @@ int main(int argc, char *argv[])
         for(int jj = 0; jj < 8; jj++)
             why[ii][jj] = 0;
     int keypress = 0;
+
+    Xmin = (TopLeftX+TopRightX)/2.0;
+    Xmax = (BottomLeftX+BottomRightX)/2.0;
+    Ymin = (TopLeftY+TopRightY)/2.0;
+    Ymax = (BottomLeftY+BottomRightY)/2.0;
+
     while(1)
     {
         // Gets measurement data
@@ -129,9 +149,6 @@ int main(int argc, char *argv[])
         for (i = 0; i < n; ++i)
         {
             long distance = data[i];
-            double radian;
-            double x;
-            double y;
 
             if ((distance < min_distance) || (distance > max_distance)) {
                 continue;
@@ -180,6 +197,23 @@ int main(int argc, char *argv[])
             multiplyMatrix();
             showPoint();
             */
+#ifndef littlestar
+            X1 = (TopRightX-fabs(outputMatrix[0][0]));
+            X2 = (fabs(outputMatrix[0][0])-TopLeftX);
+            Ymin = (X1 * TopRightY + X2 * TopLeftY) / (X2 + X1);
+            X3 = (BottomRightX-fabs(outputMatrix[0][0]));
+            X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
+            Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
+            Y1 = (TopRightY-fabs(outputMatrix[1][0]));
+            Y2 = (fabs(outputMatrix[1][0])-TopLeftY);
+            Xmin = (Y1 * TopRightX + Y2 * TopLeftX) / (Y2 + Y1);
+            Y3 = (BottomRightY-fabs(outputMatrix[1][0]));
+            Y4 = (fabs(outputMatrix[1][0])-BottomLeftY);
+            Xmax = (Y3 * BottomRightX + Y4 * BottomLeftX) / (Y4 + Y3);
+            printf("%lf ,%lf\n", Xmin, Xmax, Ymin, Ymax);
+#endif
+            unitX = (Xmax - Xmin) / 448.0;
+            unitY = (Ymax - Ymin) / 448.0;
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
 #ifdef littlestar
