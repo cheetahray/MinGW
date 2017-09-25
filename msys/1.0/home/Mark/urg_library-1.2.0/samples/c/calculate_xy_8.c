@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
                 aluanX = XY[0];
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
-                aluanY = XY[1];
+                aluanY = XY[5];
             }
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;
@@ -185,8 +185,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            showPoint();
             /*
+            showPoint();
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -216,12 +216,12 @@ int main(int argc, char *argv[])
             unitY = (Ymax - Ymin) / 448.0;
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
+			printf("%ld ,%ld\n", aluanX, aluanY);
 #ifdef littlestar
             why[3][aluanX/56]++;
 #else
             why[aluanY/56][aluanX/56]++;
 #endif
-            //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             //printf("%ld\n", ghost);
             if(ghost++ > 7)
             {
@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
                     if ( lo_send(t, "/radar", "iii", 8, aluanX, aluanY ) == -1 )
 #endif
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                    else if(1)
+                    else if(0)
                         printf("%ld ,%ld\n", aluanX, aluanY);
                     //nanosleep(&req, (struct timespec *)NULL);
                 }
