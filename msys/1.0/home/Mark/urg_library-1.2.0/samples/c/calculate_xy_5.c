@@ -20,14 +20,14 @@
 #include "kmeans.h"
 #include "rotate.h"
 //#define littlestar
-#define TopRightX 1390.0
-#define TopLeftX 235.0
-#define BottomRightX 1390.0
-#define BottomLeftX 235.0
-#define TopRightY 2190.0
-#define TopLeftY 2190.0
-#define BottomRightY 3470.0
-#define BottomLeftY 3470.0
+#define TopRightX 1350.0
+#define TopLeftX 300.0
+#define BottomRightX 1450.0
+#define BottomLeftX 275.0
+#define TopRightY 2200.0
+#define TopLeftY 2340.0
+#define BottomRightY 3425.0
+#define BottomLeftY 3415.0
 /*
 void* say_hello(void* data)
 {
@@ -166,8 +166,8 @@ int main(int argc, char *argv[])
             {
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
                 aluanX = XY[0];
-                qsort (XY, counter >> 1, sizeof(int) << 1, compareXA);
-                aluanY = XY[5];
+                //qsort (XY, counter >> 1, sizeof(int) << 1, compareXA);
+                aluanY = XY[1];
             }
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
                             iii = ii;
                             jjj = jj;
                         }
-                aluanY = iii * 56 + 28;
+                aluanY = iii * 56 + 42;
                 aluanX = jjj * 56 + 28;
 #ifdef littlestar
                 if (aluanX != lastAluanX || aluanY != lastAluanY
