@@ -20,13 +20,13 @@
 #include "kmeans.h"
 #include "rotate.h"
 //#define littlestar
-#define TopRightX 1455.0
-#define TopLeftX 234.0
-#define BottomRightX 1455.0
+#define TopRightX 1400.0
+#define TopLeftX 284.0
+#define BottomRightX 1445.0
 #define BottomLeftX 234.0
-#define TopRightY 2166.0
-#define TopLeftY 2166.0
-#define BottomRightY 3496.0
+#define TopRightY 2200.0
+#define TopLeftY 2356.0
+#define BottomRightY 3425.0
 #define BottomLeftY 3496.0
 /*
 void* say_hello(void* data)
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
                 aluanX = XY[0];
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareXA);
-                aluanY = XY[1];
+                aluanY = XY[5];
             }
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;
@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            /*
             showPoint();
+            /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -191,10 +191,10 @@ int main(int argc, char *argv[])
             */
             X1 = (TopRightX-fabs(outputMatrix[0][0]));
             X2 = (fabs(outputMatrix[0][0])-TopLeftX);
-            Ymin = (X1 * TopRightY + X2 * TopLeftY) / (X2 + X1);
+            Ymin = (X2 * TopRightY + X1 * TopLeftY) / (X2 + X1);
             X3 = (BottomRightX-fabs(outputMatrix[0][0]));
             X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
-            Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
+            Ymax = (X4 * BottomRightY + X3 * BottomLeftY) / (X4 + X3);
             Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
             Y2 = (fabs(outputMatrix[1][0])-BottomLeftY);
             Xmin = (Y1 * BottomLeftX + Y2 * TopLeftX) / (Y2 + Y1);
