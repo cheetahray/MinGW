@@ -22,12 +22,12 @@
 //#define littlestar
 #ifndef littlestar
 #define TopRightX 1450.0
-#define TopLeftX 310.0
+#define TopLeftX 320.0
 #define BottomRightX 1445.0
-#define BottomLeftX 285.0
-#define TopRightY 2340.0
+#define BottomLeftX 280.0
+#define TopRightY 2375.0
 #define TopLeftY 2225.0
-#define BottomRightY 3385.0
+#define BottomRightY 3410.0
 #define BottomLeftY 3420.0
 #else
 #define TopRightX 1452.0
