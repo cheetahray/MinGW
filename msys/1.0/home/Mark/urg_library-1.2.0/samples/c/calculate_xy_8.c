@@ -20,13 +20,13 @@
 #include "kmeans.h"
 #include "rotate.h"
 //#define littlestar
-#ifdef littlestar
-#define TopRightX 1452.0
-#define TopLeftX 285.0
+#ifndef littlestar
+#define TopRightX 1450.0
+#define TopLeftX 310.0
 #define BottomRightX 1452.0
 #define BottomLeftX 285.0
-#define TopRightY 2300.0
-#define TopLeftY 2300.0
+#define TopRightY 2340.0
+#define TopLeftY 2225.0
 #define BottomRightY 3385.0
 #define BottomLeftY 3385.0
 #else
@@ -199,23 +199,18 @@ int main(int argc, char *argv[])
             */
 #ifndef littlestar
             X1 = (TopRightX-fabs(outputMatrix[0][0]));
-            printf("%lf ,", X1);
             X2 = (fabs(outputMatrix[0][0])-TopLeftX);
-            printf("%lf ,", X2);
             Ymin = (X1 * TopRightY + X2 * TopLeftY) / (X2 + X1);
-			printf("%lf ,", Ymin);
-            X3 = (BottomRightX-fabs(outputMatrix[0][0]));
+			X3 = (BottomRightX-fabs(outputMatrix[0][0]));
             X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
             Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
-			printf("%lf ,", Ymax);
-            Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
+			Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
             Y2 = (fabs(outputMatrix[1][0])-BottomLeftY);
             Xmin = (Y1 * BottomLeftX + Y2 * TopLeftX) / (Y2 + Y1);
-			printf("%lf ,", Xmin);
-            Y3 = (TopRightY-fabs(outputMatrix[1][0]));
+			Y3 = (TopRightY-fabs(outputMatrix[1][0]));
             Y4 = (fabs(outputMatrix[1][0])-BottomRightY);
             Xmax = (Y3 * BottomRightX + Y4 * TopRightX) / (Y4 + Y3);
-			printf("%lf\n", Xmax);
+			//printf("(%lf, %lf) ~ (%lf, %lf)\n", Xmin, Ymin, Xmax, Ymax);
 #endif
             unitX = (Xmax - Xmin) / 448.0;
             unitY = (Ymax - Ymin) / 448.0;
