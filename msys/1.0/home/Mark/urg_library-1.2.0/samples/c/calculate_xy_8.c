@@ -208,13 +208,13 @@ int main(int argc, char *argv[])
             X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
             Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
 			printf("%lf ,", Ymax);
-            Y1 = (TopRightY-fabs(outputMatrix[1][0]));
-            Y2 = (fabs(outputMatrix[1][0])-TopLeftY);
-            Xmin = (Y1 * TopRightX + Y2 * TopLeftX) / (Y2 + Y1);
+            Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
+            Y2 = (fabs(outputMatrix[1][0])-BottomLeftY);
+            Xmin = (Y1 * BottomLeftX + Y2 * TopLeftX) / (Y2 + Y1);
 			printf("%lf ,", Xmin);
-            Y3 = (BottomRightY-fabs(outputMatrix[1][0]));
-            Y4 = (fabs(outputMatrix[1][0])-BottomLeftY);
-            Xmax = (Y3 * BottomRightX + Y4 * BottomLeftX) / (Y4 + Y3);
+            Y3 = (TopRightY-fabs(outputMatrix[1][0]));
+            Y4 = (fabs(outputMatrix[1][0])-BottomRightY);
+            Xmax = (Y3 * BottomRightX + Y4 * TopRightX) / (Y4 + Y3);
 			printf("%lf\n", Xmax);
 #endif
             unitX = (Xmax - Xmin) / 448.0;
