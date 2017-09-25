@@ -25,7 +25,7 @@
 #define TopLeftX 320.0
 #define BottomRightX 1445.0
 #define BottomLeftX 280.0
-#define TopRightY 2375.0
+#define TopRightY 2385.0
 #define TopLeftY 2225.0
 #define BottomRightY 3410.0
 #define BottomLeftY 3420.0
@@ -237,10 +237,8 @@ int main(int argc, char *argv[])
                         }
                 aluanY = iii * 56 + 28;
                 aluanX = jjj * 56 + 28;
-                if (aluanX != lastAluanX
-#ifndef littlestar
-                        || aluanY != lastAluanY
-#endif
+#ifdef littlestar
+                if (aluanX != lastAluanX || aluanY != lastAluanY
                    )
                 {
                     //printf("%ld, %ld\n", aluanX, lastAluanX);
@@ -248,6 +246,7 @@ int main(int argc, char *argv[])
                     lastAluanY = aluanY;
                     keypress = 1;
                 }
+#endif
                 if( 1 == keypress )
                 {
                     keypress = 2;
