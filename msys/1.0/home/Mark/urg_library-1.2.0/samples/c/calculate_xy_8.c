@@ -23,12 +23,12 @@
 #ifndef littlestar
 #define TopRightX 1450.0
 #define TopLeftX 310.0
-#define BottomRightX 1452.0
+#define BottomRightX 1445.0
 #define BottomLeftX 285.0
 #define TopRightY 2340.0
 #define TopLeftY 2225.0
 #define BottomRightY 3385.0
-#define BottomLeftY 3385.0
+#define BottomLeftY 3420.0
 #else
 #define TopRightX 1452.0
 #define TopLeftX 285.0
@@ -122,10 +122,10 @@ int main(int argc, char *argv[])
             why[ii][jj] = 0;
     int keypress = 0;
 
-    Xmin = (TopLeftX+BottomLeftX)/2.0;
-    Xmax = (TopRightX+BottomRightX)/2.0;
-    Ymin = (TopLeftY+TopRightY)/2.0;
-    Ymax = (BottomLeftY+BottomRightY)/2.0;
+    Xmin = min(TopLeftX,BottomLeftX);
+    Xmax = max(TopRightX,BottomRightX);
+    Ymin = min(TopLeftY,TopRightY);
+    Ymax = max(BottomLeftY,BottomRightY);
 
     while(1)
     {
