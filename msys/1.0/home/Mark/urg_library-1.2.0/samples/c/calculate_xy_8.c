@@ -21,19 +21,19 @@
 #include "rotate.h"
 //#define littlestar
 #ifdef littlestar
-#define TopRightX 285.0
+#define TopRightX 1452.0
 #define TopLeftX 285.0
 #define BottomRightX 1452.0
-#define BottomLeftX 1452.0
+#define BottomLeftX 285.0
 #define TopRightY 2300.0
 #define TopLeftY 2300.0
 #define BottomRightY 3385.0
 #define BottomLeftY 3385.0
 #else
-#define TopRightX 285.0
+#define TopRightX 1452.0
 #define TopLeftX 285.0
 #define BottomRightX 1452.0
-#define BottomLeftX 1452.0
+#define BottomLeftX 285.0
 #define TopRightY 2300.0
 #define TopLeftY 2300.0
 #define BottomRightY 3385.0
@@ -122,8 +122,8 @@ int main(int argc, char *argv[])
             why[ii][jj] = 0;
     int keypress = 0;
 
-    Xmin = (TopLeftX+TopRightX)/2.0;
-    Xmax = (BottomLeftX+BottomRightX)/2.0;
+    Xmin = (TopLeftX+BottomLeftX)/2.0;
+    Xmax = (TopRightX+BottomRightX)/2.0;
     Ymin = (TopLeftY+TopRightY)/2.0;
     Ymax = (BottomLeftY+BottomRightY)/2.0;
 
@@ -199,18 +199,23 @@ int main(int argc, char *argv[])
             */
 #ifndef littlestar
             X1 = (TopRightX-fabs(outputMatrix[0][0]));
+            printf("%lf ,", X1);
             X2 = (fabs(outputMatrix[0][0])-TopLeftX);
+            printf("%lf ,", X2);
             Ymin = (X1 * TopRightY + X2 * TopLeftY) / (X2 + X1);
+			printf("%lf ,", Ymin);
             X3 = (BottomRightX-fabs(outputMatrix[0][0]));
             X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
             Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
+			printf("%lf ,", Ymax);
             Y1 = (TopRightY-fabs(outputMatrix[1][0]));
             Y2 = (fabs(outputMatrix[1][0])-TopLeftY);
             Xmin = (Y1 * TopRightX + Y2 * TopLeftX) / (Y2 + Y1);
+			printf("%lf ,", Xmin);
             Y3 = (BottomRightY-fabs(outputMatrix[1][0]));
             Y4 = (fabs(outputMatrix[1][0])-BottomLeftY);
             Xmax = (Y3 * BottomRightX + Y4 * BottomLeftX) / (Y4 + Y3);
-            printf("%lf ,%lf, %lf, %lf\n", Xmin, Xmax, Ymin, Ymax);
+			printf("%lf\n", Xmax);
 #endif
             unitX = (Xmax - Xmin) / 448.0;
             unitY = (Ymax - Ymin) / 448.0;
