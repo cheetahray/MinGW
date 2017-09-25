@@ -19,11 +19,15 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-#define littlestar
-#define Xmin 270.0
-#define Xmax 1360.0
-#define Ymin 2360.0
-#define Ymax 3485.0
+//#define littlestar
+#define TopRightX 1360.0
+#define TopLeftX 270.0
+#define BottomRightX 1360.0
+#define BottomLeftX 270.0
+#define TopRightY 2360.0
+#define TopLeftY 2360.0
+#define BottomRightY 3485.0
+#define BottomLeftY 3485.0
 /*
 void* say_hello(void* data)
 {
@@ -49,16 +53,15 @@ int main(int argc, char *argv[])
     int XY[1024];
     int ghost = 0;
     int why[8][8];
-    /*
-    int k, kk;
-    double cluster_centroid[32];
-    int   *cluster_assignment_final;
-    double last[2];
-    */
+
+    double Xmin, Xmax, Ymin, Ymax;
+    double X1, X2, X3, X4;
+    double Y1, Y2, Y3, Y4;
+    double radian, x, y;
+
     double unitX = 0.0;
     double unitY = 0.0;
-    unitX = (Xmax - Xmin) / 448.0;
-    unitY = (Ymax - Ymin) / 448.0;
+
     if (open_urg_sensor(&urg, argc, argv) < 0) {
         return 1;
     }
@@ -107,6 +110,12 @@ int main(int argc, char *argv[])
         for(int jj = 0; jj < 8; jj++)
             why[ii][jj] = 0;
     int keypress = 0;
+
+    Xmin = min(TopLeftX,BottomLeftX);
+    Xmax = max(TopRightX,BottomRightX);
+    Ymin = min(TopLeftY,TopRightY);
+    Ymax = max(BottomLeftY,BottomRightY);
+
     while(1)
     {
         // Gets measurement data
@@ -129,9 +138,6 @@ int main(int argc, char *argv[])
         for (i = 0; i < n; ++i)
         {
             long distance = data[i];
-            double radian;
-            double x;
-            double y;
 
             if ((distance < min_distance) || (distance > max_distance)) {
                 continue;
@@ -158,7 +164,7 @@ int main(int argc, char *argv[])
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
                 aluanX = XY[0];
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
-                aluanY = XY[1];
+                aluanY = XY[5];
             }
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;
@@ -168,8 +174,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            /*
             showPoint();
+            /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
@@ -180,14 +186,29 @@ int main(int argc, char *argv[])
             multiplyMatrix();
             showPoint();
             */
+            X1 = (TopRightX-fabs(outputMatrix[0][0]));
+            X2 = (fabs(outputMatrix[0][0])-TopLeftX);
+            Ymin = (X1 * TopRightY + X2 * TopLeftY) / (X2 + X1);
+            X3 = (BottomRightX-fabs(outputMatrix[0][0]));
+            X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
+            Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
+            Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
+            Y2 = (fabs(outputMatrix[1][0])-BottomLeftY);
+            Xmin = (Y1 * BottomLeftX + Y2 * TopLeftX) / (Y2 + Y1);
+            Y3 = (TopRightY-fabs(outputMatrix[1][0]));
+            Y4 = (fabs(outputMatrix[1][0])-BottomRightY);
+            Xmax = (Y3 * BottomRightX + Y4 * TopRightX) / (Y4 + Y3);
+            //printf("(%lf, %lf) ~ (%lf, %lf)\n", Xmin, Ymin, Xmax, Ymax);
+            unitX = (Xmax - Xmin) / 448.0;
+            unitY = (Ymax - Ymin) / 448.0;
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
+            //printf("%ld ,%ld\n", aluanX, aluanY);
 #ifdef littlestar
             why[3][aluanX/56]++;
 #else
             why[aluanY/56][aluanX/56]++;
 #endif
-            //printf("%ld ,%ld\n", aluanX/56, aluanY/56);
             //printf("%ld\n", ghost);
             if(ghost++ > 7)
             {
@@ -203,10 +224,8 @@ int main(int argc, char *argv[])
                         }
                 aluanY = iii * 56 + 28;
                 aluanX = jjj * 56 + 28;
-                if (aluanX != lastAluanX
-#ifndef littlestar
-                        || aluanY != lastAluanY
-#endif
+#ifdef littlestar
+                if (aluanX != lastAluanX || aluanY != lastAluanY
                    )
                 {
                     //printf("%ld, %ld\n", aluanX, lastAluanX);
@@ -214,6 +233,7 @@ int main(int argc, char *argv[])
                     lastAluanY = aluanY;
                     keypress = 1;
                 }
+#endif
                 if( 1 == keypress )
                 {
                     keypress = 2;
@@ -223,7 +243,7 @@ int main(int argc, char *argv[])
                     if ( lo_send(t, "/radar", "iii", 6, aluanX, aluanY ) == -1 )
 #endif
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-                    else if(1)
+                    else if(0)
                         printf("%ld ,%ld\n", aluanX, aluanY);
                     //nanosleep(&req, (struct timespec *)NULL);
                 }

@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
             X1 = (TopRightX-fabs(outputMatrix[0][0]));
             X2 = (fabs(outputMatrix[0][0])-TopLeftX);
             Ymin = (X1 * TopRightY + X2 * TopLeftY) / (X2 + X1);
-	        X3 = (BottomRightX-fabs(outputMatrix[0][0]));
+            X3 = (BottomRightX-fabs(outputMatrix[0][0]));
             X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
             Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
             Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
