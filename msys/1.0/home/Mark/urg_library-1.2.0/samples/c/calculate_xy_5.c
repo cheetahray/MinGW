@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
                 aluanX = XY[0];
                 //qsort (XY, counter >> 1, sizeof(int) << 1, compareXA);
-                aluanY = XY[1];
+                aluanY = XY[9];
             }
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;
@@ -177,18 +177,18 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            /*
             showPoint();
+            /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
             setUpRotationMatrix(0.0, 0.0, 1.0, 0.0);
             multiplyMatrix();
             showPoint();
-            */
             setUpRotationMatrix(-0.6, 0.0, 0.0, 1.0);
             multiplyMatrix();
             showPoint();
+            */
             X1 = (TopRightX-fabs(outputMatrix[0][0]));
             X2 = (fabs(outputMatrix[0][0])-TopLeftX);
             Ymin = (X2 * TopRightY + X1 * TopLeftY) / (X2 + X1);
