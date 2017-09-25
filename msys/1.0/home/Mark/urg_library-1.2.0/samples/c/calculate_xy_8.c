@@ -20,7 +20,6 @@
 #include "kmeans.h"
 #include "rotate.h"
 //#define littlestar
-#ifndef littlestar
 #define TopRightX 1450.0
 #define TopLeftX 320.0
 #define BottomRightX 1445.0
@@ -29,16 +28,6 @@
 #define TopLeftY 2225.0
 #define BottomRightY 3410.0
 #define BottomLeftY 3420.0
-#else
-#define TopRightX 1452.0
-#define TopLeftX 285.0
-#define BottomRightX 1452.0
-#define BottomLeftX 285.0
-#define TopRightY 2300.0
-#define TopLeftY 2300.0
-#define BottomRightY 3385.0
-#define BottomLeftY 3385.0
-#endif
 /*
 void* say_hello(void* data)
 {
@@ -197,26 +186,24 @@ int main(int argc, char *argv[])
             multiplyMatrix();
             showPoint();
             */
-#ifndef littlestar
             X1 = (TopRightX-fabs(outputMatrix[0][0]));
             X2 = (fabs(outputMatrix[0][0])-TopLeftX);
             Ymin = (X1 * TopRightY + X2 * TopLeftY) / (X2 + X1);
-			X3 = (BottomRightX-fabs(outputMatrix[0][0]));
+	    X3 = (BottomRightX-fabs(outputMatrix[0][0]));
             X4 = (fabs(outputMatrix[0][0])-BottomLeftX);
             Ymax = (X3 * BottomRightY + X4 * BottomLeftY) / (X4 + X3);
-			Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
+            Y1 = (TopLeftY-fabs(outputMatrix[1][0]));
             Y2 = (fabs(outputMatrix[1][0])-BottomLeftY);
             Xmin = (Y1 * BottomLeftX + Y2 * TopLeftX) / (Y2 + Y1);
-			Y3 = (TopRightY-fabs(outputMatrix[1][0]));
+            Y3 = (TopRightY-fabs(outputMatrix[1][0]));
             Y4 = (fabs(outputMatrix[1][0])-BottomRightY);
             Xmax = (Y3 * BottomRightX + Y4 * TopRightX) / (Y4 + Y3);
-			//printf("(%lf, %lf) ~ (%lf, %lf)\n", Xmin, Ymin, Xmax, Ymax);
-#endif
+            //printf("(%lf, %lf) ~ (%lf, %lf)\n", Xmin, Ymin, Xmax, Ymax);
             unitX = (Xmax - Xmin) / 448.0;
             unitY = (Ymax - Ymin) / 448.0;
             aluanX = (int)( (outputMatrix[0][0] + Xmax) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
-			printf("%ld ,%ld\n", aluanX, aluanY);
+            //printf("%ld ,%ld\n", aluanX, aluanY);
 #ifdef littlestar
             why[3][aluanX/56]++;
 #else
