@@ -160,14 +160,14 @@ int main(int argc, char *argv[])
             }
         }
 
-        if(counter > 0)
+        if(counter > 7)
         {
             if(counter >= 2)
             {
                 qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
                 aluanX = XY[0];
                 //qsort (XY, counter >> 1, sizeof(int) << 1, compareXA);
-                aluanY = XY[9];
+                aluanY = XY[7];
             }
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;

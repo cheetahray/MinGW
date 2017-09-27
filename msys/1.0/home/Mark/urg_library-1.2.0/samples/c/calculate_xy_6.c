@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        if(counter > 0)
+        if(counter > 7)
         {
             if(counter >= 2)
             {
