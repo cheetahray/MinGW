@@ -174,8 +174,8 @@ int main(int argc, char *argv[])
             outputMatrix[1][0] = (double)aluanY;
             outputMatrix[2][0] = 0.0;
             outputMatrix[3][0] = 1.0;
-            /*
             showPoint();
+            /*
             setUpRotationMatrix(0.0, 1.0, 0.0, 0.0);
             multiplyMatrix();
             showPoint();
