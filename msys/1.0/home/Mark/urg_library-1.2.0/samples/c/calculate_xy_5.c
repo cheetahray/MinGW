@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
                             iii = ii;
                             jjj = jj;
                         }
-                aluanY = iii * 56 + 42;
+                aluanY = iii * 56 + 28;
                 aluanX = jjj * 56 + 28;
 #if 1 //def littlestar
                 if (aluanX != lastAluanX || aluanY != lastAluanY
