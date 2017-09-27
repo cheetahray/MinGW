@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-#define littlestar
+//#define littlestar
 #define TopRightX 1400.0
 #define TopLeftX 284.0
 #define BottomRightX 1445.0
