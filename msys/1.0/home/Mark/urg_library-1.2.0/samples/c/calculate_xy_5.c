@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
             {
                 XY[counter++] = (int)x;
                 XY[counter++] = (int)y;
-#ifdef littlestar
+#if 1 //def littlestar
                 if(0 == keypress)
 #endif
                     keypress = 1;
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
             aluanX = (int)( (outputMatrix[0][0] - Xmin) / unitX );
             aluanY = (int)( (Ymin + outputMatrix[1][0]) / -unitY );
             //printf("%ld ,%ld\n", aluanX, aluanY);            
-#ifdef littlestar
+#if 0 //def littlestar
             why[3][aluanX/56]++;
 #else
             why[aluanY/56][aluanX/56]++;
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
                         }
                 aluanY = iii * 56 + 42;
                 aluanX = jjj * 56 + 28;
-#ifdef littlestar
+#if 1 //def littlestar
                 if (aluanX != lastAluanX || aluanY != lastAluanY
                    )
                 {
@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
                 if( 1 == keypress )
                 {
                     keypress = 2;
-#ifdef littlestar
+#if 0 //def littlestar
                     if ( lo_send(t, "/radar", "iii", 5, aluanX, 196 ) == -1 )
 #else
                     if ( lo_send(t, "/radar", "iii", 5, aluanX, aluanY ) == -1 )
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
         {
             if(keypress > 0)
             {
-#ifdef littlestar
+#if 1 //def littlestar
                 if ( lo_send(t, "/radar", "iii", 5, 0, 0 ) == -1 )
                     printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                 else if(1)
