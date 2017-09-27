@@ -19,7 +19,7 @@
 #include "lo/lo.h"
 #include "kmeans.h"
 #include "rotate.h"
-//#define littlestar
+#define littlestar
 #define TopRightX 1450.0
 #define TopLeftX 320.0
 #define BottomRightX 1445.0
@@ -159,13 +159,11 @@ int main(int argc, char *argv[])
 
         if(counter > 5)
         {
-            if(counter >= 2)
-            {
-                qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
-                aluanX = XY[0];
-                qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
-                aluanY = XY[5];
-            }
+            qsort (XY, counter >> 1, sizeof(int) << 1, compareYD);
+            aluanX = XY[0];
+            qsort (XY, counter >> 1, sizeof(int) << 1, compareXD);
+            aluanY = XY[5];
+
             inputMatrix[0][0] = (double)aluanX;
             inputMatrix[1][0] = (double)aluanY;
             inputMatrix[2][0] = 0.0;
