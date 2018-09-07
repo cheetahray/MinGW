@@ -246,6 +246,8 @@ int main(int argc, char *argv[])
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     else if(0)
                         printf("%ld ,%ld\n", aluanX, aluanY);
+					if ( lo_send(t, "/button", "iff", 5, outputMatrix[0][0], outputMatrix[0][1] ) == -1 )
+                        printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     //nanosleep(&req, (struct timespec *)NULL);
                 }
                 ghost = 0;
