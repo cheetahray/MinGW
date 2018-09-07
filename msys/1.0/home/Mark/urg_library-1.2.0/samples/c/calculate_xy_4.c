@@ -20,14 +20,14 @@
 #include "kmeans.h"
 #include "rotate.h"
 //#define littlestar
-#define TopRightX 1350.0
-#define TopLeftX 300.0
-#define BottomRightX 1450.0
+#define TopRightX 1270.0
+#define TopLeftX 275.0
+#define BottomRightX 1270.0
 #define BottomLeftX 275.0
-#define TopRightY 2200.0
-#define TopLeftY 2340.0
-#define BottomRightY 3425.0
-#define BottomLeftY 3415.0
+#define TopRightY 770.0
+#define TopLeftY 770.0
+#define BottomRightY 2100.0
+#define BottomLeftY 2100.0
 /*
 void* say_hello(void* data)
 {
@@ -78,8 +78,8 @@ int main(int argc, char *argv[])
     int first_step = urg_rad2step(&urg, -22);
     int last_step = urg_rad2step(&urg, +22);
     */
-    int first_step = urg_deg2step(&urg, 0.0); //urg_rad2step(&urg, 0);
-    int last_step = urg_deg2step(&urg, 37.0); //urg_rad2step(&urg, 0.65);
+    int first_step = urg_deg2step(&urg, 6.0); //urg_rad2step(&urg, 0);
+    int last_step = urg_deg2step(&urg, 44.0); //urg_rad2step(&urg, 0.65);
     int skip_step = 0;
     int ret = urg_set_scanning_parameter(&urg, first_step, last_step, skip_step);
     // \todo check error code
@@ -123,8 +123,9 @@ int main(int argc, char *argv[])
         n = urg_get_distance(&urg, data, &time_stamp);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
-            urg_close(&urg);
-            return 1;
+			continue;
+            //urg_close(&urg);
+            //return 1;
         }
         else
         {

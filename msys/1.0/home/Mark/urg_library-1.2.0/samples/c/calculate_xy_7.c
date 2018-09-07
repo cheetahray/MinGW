@@ -123,8 +123,9 @@ int main(int argc, char *argv[])
         n = urg_get_distance(&urg, data, &time_stamp);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
-            urg_close(&urg);
-            return 1;
+			continue;
+            //urg_close(&urg);
+            //return 1;
         }
         else
         {
