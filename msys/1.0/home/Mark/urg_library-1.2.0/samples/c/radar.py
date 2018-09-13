@@ -8,11 +8,11 @@ import threading
 cc = OSC.OSCClient()
 cc.connect(('192.168.0.252', 12002))   # localhost, port 57120
 
-server = OSCServer( ("localhost", 12001) )
-server.timeout = 0
+server = OSCServer( ("0.0.0.0", 12001) )
+server.timeout = 0.001
 run = True
 
-def click(unit, pos, speed):
+def click(pos, speed):
     global cc
     #unit = random.randint(5,5)
     oscmsg = OSC.OSCMessage()
@@ -39,7 +39,8 @@ def user_callback(path, tags, args, source):
     # tags will contain 'fff'
     # args is a OSCMessage with data
     # source is where the message came from (in case you need to reply)
-    #print 'i ={:>5} , x ={:>15} , y ={:>15}'.format(args[0],args[1],args[2])
+    print 'i ={:>5} , x ={:>15} , y ={:>15}'.format(args[0],args[1],args[2])
+    print mode
     if args[0] == 3: 
         if mode[args[0]] == 0:
             if args[1] > -862.0 and args[1] < -544.0 and args[2] < -993.0 and args[2] > -1333.0:
@@ -96,6 +97,7 @@ def quit_callback(path, tags, args, source):
 def mode_callback(path, tags, args, source):
     # don't do this at home (or it'll quit blender)
     mode[args[0]] = args[1]
+    #print args[0], args[1]
     
 server.addMsgHandler( "/button1", user_callback )
 #server.addMsgHandler( "/quit", quit_callback )
@@ -114,7 +116,8 @@ def AS(zero):
     threading.Timer(86400, AS, [0]).start()
 
 mode = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    
+
+os.system('\"C:\Users\Radar IV\Documents\ReRadar.bat\"')    
 threading.Timer(86400, AS, [0]).start()
     
 # simulate a "game engine"
