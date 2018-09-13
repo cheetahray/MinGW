@@ -100,8 +100,8 @@ int main(int argc, char *argv[])
     pthread_join(t1,NULL);
     */
     lo_address t = lo_address_new("192.168.0.252", "12002");
-    //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 33; // length of time to sleep, in miliseconds
+	//urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
+    int milisec = 10; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
             }
 
         }
-        //free(XY);
+        nanosleep(&req, (struct timespec *)NULL);//free(XY);
     }
     // Disconnects
     free(data);
