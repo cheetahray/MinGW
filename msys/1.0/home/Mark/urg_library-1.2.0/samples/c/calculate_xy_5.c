@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 
     // \~english Defines the number of scans
     // \~english 123 scans are requested, and no scan skipping in this example
-    int scan_times = 1;
+    int scan_times = -1;
     int skip_scan = 0;
     int counter = 0;
     int aluanX = 0;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     Xmax = max(TopRightX,BottomRightX);
     Ymin = min(TopLeftY,TopRightY);
     Ymax = max(BottomLeftY,BottomRightY);
-
+    urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
     while(1)
     {
         // Gets measurement data
