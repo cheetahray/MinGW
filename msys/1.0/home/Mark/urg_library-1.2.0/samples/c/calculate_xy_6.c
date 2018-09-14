@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
             }
 
         }
-        nanosleep(&req, (struct timespec *)NULL);//free(XY);
+        //nanosleep(&req, (struct timespec *)NULL);//free(XY);
     }
     // Disconnects
     free(data);
