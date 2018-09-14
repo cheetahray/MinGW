@@ -100,8 +100,9 @@ int main(int argc, char *argv[])
     pthread_join(t1,NULL);
     */
     lo_address t = lo_address_new("192.168.0.252","12002");
+    lo_address t1 = lo_address_new("127.0.0.1","12001");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 33; // length of time to sleep, in miliseconds
+    int milisec = 100; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
@@ -243,7 +244,7 @@ int main(int argc, char *argv[])
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     else if(0)
                         printf("%ld ,%ld\n", aluanX, aluanY);
-					if ( lo_send(t, "/button", "iff", 8, outputMatrix[0][0], outputMatrix[0][1] ) == -1 )
+					if ( lo_send(t1, "/button1", "iff", 8, outputMatrix[0][0], outputMatrix[0][1] ) == -1 )
                         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
                     //nanosleep(&req, (struct timespec *)NULL);
                 }
@@ -273,7 +274,7 @@ int main(int argc, char *argv[])
             }
 
         }
-        //free(XY);
+        nanosleep(&req, (struct timespec *)NULL);//free(XY);
     }
     // Disconnects
     free(data);
