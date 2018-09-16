@@ -120,7 +120,6 @@ int main(int argc, char *argv[])
     while(1)
     {
         // Gets measurement data
-        urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
