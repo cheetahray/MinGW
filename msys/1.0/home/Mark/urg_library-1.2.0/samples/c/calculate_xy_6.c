@@ -20,14 +20,14 @@
 #include "kmeans.h"
 #include "rotate.h"
 //#define littlestar
-#define TopRightX 1350.0
-#define TopLeftX 270.0
-#define BottomRightX 1430.0
-#define BottomLeftX 270.0
-#define TopRightY 2370.0
-#define TopLeftY 2220.0
-#define BottomRightY 3535.0
-#define BottomLeftY 3495.0
+#define TopRightX 1377.0
+#define TopLeftX 276.0
+#define BottomRightX 1454.0
+#define BottomLeftX 310.0
+#define TopRightY 2185.0
+#define TopLeftY 2209.0
+#define BottomRightY 3444.0
+#define BottomLeftY 3507.0
 /*
 void* say_hello(void* data)
 {
@@ -120,7 +120,6 @@ int main(int argc, char *argv[])
     while(1)
     {
         // Gets measurement data
-        urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
         n = urg_get_distance(&urg, data, &time_stamp);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
