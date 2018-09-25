@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     lo_address t = lo_address_new("192.168.0.252", "12002");
     lo_address t1 = lo_address_new("127.0.0.1", "12001");
     //urg_start_measurement(&urg, URG_DISTANCE, URG_SCAN_INFINITY, skip_scan);
-    int milisec = 50; // length of time to sleep, in miliseconds
+    int milisec = 490; // length of time to sleep, in miliseconds
     struct timespec req = {0};
     req.tv_sec = 0;
     req.tv_nsec = milisec * 1000000L;
@@ -123,8 +123,15 @@ int main(int argc, char *argv[])
         n = urg_get_distance(&urg, data, &time_stamp);
         if (n <= 0) {
             printf("urg_get_distance: %s\n", urg_error(&urg));
-			continue;
-            //urg_close(&urg);
+            if ( lo_send(t1, "/myos", "i", 6 ) == -1 )
+                printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+            nanosleep(&req, (struct timespec *)NULL);
+			//urg_start_measurement(&urg, URG_DISTANCE, scan_times, skip_scan);
+            //printf("urg_ray: %s\n", urg_error(&urg));
+            //free(data);
+			//urg_close(&urg);
+			//open_urg_sensor(&urg, argc, argv);
+            continue;
             //return 1;
         }
         else

@@ -5,12 +5,25 @@ from time import sleep
 import os
 import OSC
 import threading
+import datetime
 cc = OSC.OSCClient()
 cc.connect(('192.168.0.252', 12002))   # localhost, port 57120
+dd = OSC.OSCClient()
+dd.connect(('192.168.0.250', 7111))   # localhost, port 57120
 
 server = OSCServer( ("0.0.0.0", 12001) )
 server.timeout = 0.001
 run = True
+
+def to250(pos, speed, msg="/mode"):
+    global dd
+    #unit = random.randint(5,5)
+    oscmsg = OSC.OSCMessage()
+    oscmsg.setAddress(msg)
+    oscmsg.append(pos)
+    oscmsg.append(speed)
+    print oscmsg
+    dd.send(oscmsg)
 
 def click(pos, speed, msg="/button"):
     global cc
@@ -31,6 +44,9 @@ def handle_timeout(self):
 # funny python's way to add a method to an instance of a class
 import types
 server.handle_timeout = types.MethodType(handle_timeout, server)
+
+def cell_callback(path, tags, args, source):
+    click(args[0],args[1])
 
 def user_callback(path, tags, args, source):
     # which user will be determined by path:
@@ -121,29 +137,29 @@ def user_callback(path, tags, args, source):
                     click(args[0],3)
     elif args[0] == 6: 
         if mode[args[0]] == 0:
-            if args[1] > -991.0 and args[1] < -615.0 and args[2] < -2411.0 and args[2] > -2910.0:
+            if args[1] > -903.0 and args[1] < -688.0 and args[2] < -2411.0 and args[2] > -2900.0:
                 click(args[0],0)
-            elif args[1] > -1012.0 and args[1] < -633.0 and args[2] < -3144.0 and args[2] > -3423.0:
+            elif args[1] > -1119.0 and args[1] < -688.0 and args[2] < -3144.0 and args[2] > -3515.0:
                 click(args[0],1)
         elif mode[args[0]] == 1:
             if args[2] < -2519.0 and args[2] > -2864.0:
-                if args[1] > -1263.0 and args[1] < -1092.0:
+                if args[1] > -1444.0 and args[1] < -1191.0:
                     click(args[0],0)
-                elif args[1] < -839.0:
+                elif args[1] < -913.0:
                     click(args[0],1)
-                elif args[1] < -528.0:
+                elif args[1] < -630.0:
                     click(args[0],2)
-                elif args[1] < -282.0:
+                elif args[1] < -362.0:
                     click(args[0],3)
         elif mode[args[0]] == 2:
-            if args[2] < -3213.0 and args[2] > -3421.0:
-                if args[1] > -1353.0 and args[1] < -1094.0:
+            if args[2] < -3185.0 and args[2] > -3487.0:
+                if args[1] > -1435.0 and args[1] < -1176.0:
                     click(args[0],0)
-                elif args[1] < -839.0:
+                elif args[1] < -898.0:
                     click(args[0],1)
-                elif args[1] < -550.0:
+                elif args[1] < -635.0:
                     click(args[0],2)
-                elif args[1] < -312.0:
+                elif args[1] < -362.0:
                     click(args[0],3)
     elif args[0] == 7: 
         if mode[args[0]] == 0:
@@ -198,20 +214,33 @@ def user_callback(path, tags, args, source):
                 elif args[1] < -389.0:
                     click(args[0],3)
     
-def quit_callback(path, tags, args, source):
+def auto_callback(path, tags, args, source):
     # don't do this at home (or it'll quit blender)
-    global run
-    run = False
+    global AUTO
+    AUTO = args[0]
+    print AUTO
 
 def mode_callback(path, tags, args, source):
     # don't do this at home (or it'll quit blender)
     mode[args[0]] = args[1]
-    #print args[0], args[1]
+    #print args[0], args[1], path
     click(args[0], args[1], path)
+    to250(args[0], args[1], path)
+
+def update_callback(path, tags, args, source):
+    #print args[0], args[1], path
+    to250(args[0], args[1], path)
+    
+def myos_callback(path, tags, args, source):
+    global myos
+    os.system(myos)
     
 server.addMsgHandler( "/button1", user_callback )
-#server.addMsgHandler( "/quit", quit_callback )
+server.addMsgHandler( "/auto", auto_callback )
 server.addMsgHandler( "/mode", mode_callback )
+server.addMsgHandler( "/myos", myos_callback )
+server.addMsgHandler( "/cell", cell_callback )
+server.addMsgHandler( "/update", update_callback )
 
 # user script that's called by the game engine every frame
 def each_frame():
@@ -222,18 +251,30 @@ def each_frame():
         server.handle_request()
 
 def AS(zero):
-    os.system('\"C:\Users\Radar IV\Documents\ReRadar.bat\"')
-    threading.Timer(86400, AS, [0]).start()
-
-mode = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-
-os.system('\"C:\Users\Radar IV\Documents\ReRadar.bat\"')    
-threading.Timer(86400, AS, [0]).start()
+    global myos
+    if mode[6] > 0 or mode[5] > 0:
+        threading.Timer(90, AS, [0]).start()
+    else:
+        os.system(myos)
+        threading.Timer(300, AS, [0]).start()
     
+mode = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+myos = '\"C:\\Users\\Radar III\\Documents\\ReRadar.bat\"'
+os.system(myos)    
+#threading.Timer(300, AS, [0]).start()
+AUTO = 0
 # simulate a "game engine"
 while run:
-    # do the game stuff:
-    #sleep(0.01)
+    NOW = datetime.datetime.now()
+    if NOW.minute == 15:
+        if NOW.hour == 9:
+            if NOW.second == 0:
+                os.system(myos)  
+    elif 1 == AUTO and NOW.minute >= 56 and NOW.minute <= 58:
+        click(5, -1, "/mode")
+        click(6, -1, "/mode")
+        # do the game stuff:
+        sleep(0.1)    
     # call user script
     each_frame()
 
